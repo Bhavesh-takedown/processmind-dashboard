@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProcessMind — Business Process Analytics</title>
+  <meta name="description" content="Business process analytics dashboard powered by process mining — discover bottlenecks, analyze flows, and optimize your business processes." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="static/css/dashboard.css" />
+</head>
+<body>
+
+<!-- ============================================================
+     SIDEBAR NAVIGATION
+     The sidebar holds logo + nav links for each section.
+============================================================ -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">⚡</div>
+    <span class="logo-text">ProcessMind</span>
+  </div>
+
+  <div class="sidebar-section-label">ANALYTICS</div>
+  <a href="#" class="nav-item active" data-view="overview" id="nav-overview">
+    <span class="nav-icon">📊</span>
+    <span>Overview</span>
+  </a>
+  <a href="#" class="nav-item" data-view="process-map" id="nav-process-map">
+    <span class="nav-icon">🗺️</span>
+    <span>Process Map</span>
+  </a>
+  <a href="#" class="nav-item" data-view="bottlenecks" id="nav-bottlenecks">
+    <span class="nav-icon">🚨</span>
+    <span>Bottlenecks</span>
+  </a>
+  <a href="#" class="nav-item" data-view="cases" id="nav-cases">
+    <span class="nav-icon">📋</span>
+    <span>Case Explorer</span>
+  </a>
+  <a href="#" class="nav-item" data-view="resources" id="nav-resources">
+    <span class="nav-icon">👥</span>
+    <span>Resources</span>
+  </a>
+
+  <div class="sidebar-section-label" style="margin-top:24px;">DATA</div>
+  <a href="#" class="nav-item" data-view="upload" id="nav-upload">
+    <span class="nav-icon">📂</span>
+    <span>Load Event Log</span>
+  </a>
+
+  <div class="sidebar-footer">
+    <div class="data-status" id="dataStatus">
+      <div class="status-dot inactive"></div>
+      <span>No data loaded</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================================
+     MAIN CONTENT AREA
+============================================================ -->
+<main class="main-content">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1 class="page-title" id="pageTitle">Overview</h1>
+      <span class="page-subtitle" id="pageSubtitle">Business Process Analytics Dashboard</span>
+    </div>
+    <div class="topbar-right">
+      <div class="time-filter">
+        <button class="filter-btn active" data-filter="all">All Time</button>
+        <button class="filter-btn" data-filter="30d">30 Days</button>
+        <button class="filter-btn" data-filter="7d">7 Days</button>
+      </div>
+      <button class="btn-primary" id="loadSampleBtn">
+        ✨ Load Sample Data
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       VIEW: UPLOAD / LOAD DATA
+  ============================================================ -->
+  <section class="view active" id="view-upload">
+    <div class="upload-hero">
+      <div class="upload-card">
+        <div class="upload-icon">📂</div>
+        <h2>Load Your Event Log</h2>
+        <p>Upload a CSV file with columns: <code>case_id</code>, <code>activity</code>, <code>timestamp</code> (and optionally <code>resource</code>, <code>cost</code>)</p>
+        <div class="upload-zone" id="uploadZone">
+          <div class="upload-zone-inner">
+            <span class="upload-zone-icon">⬆️</span>
+            <p>Drag & drop your CSV here or <label for="fileInput" class="upload-link">browse files</label></p>
+            <input type="file" id="fileInput" accept=".csv" style="display:none" />
+            <p class="upload-note">CSV format: case_id, activity, timestamp[, resource, cost]</p>
+          </div>
+        </div>
+        <div class="divider-or"><span>or</span></div>
+        <button class="btn-primary btn-large" id="loadSampleBtn2">
+          🚀 Load Sample Sales Order Data
+        </button>
+        <p class="sample-desc">500 cases · Order-to-Cash process · Pre-loaded bottlenecks for learning</p>
+      </div>
+
+      <div class="upload-info">
+        <h3>📖 What is an Event Log?</h3>
+        <div class="info-box">
+          <p>An event log records <strong>every action</strong> taken during a business process. Each row = one event.</p>
+          <table class="sample-table">
+            <thead><tr><th>case_id</th><th>activity</th><th>timestamp</th><th>resource</th></tr></thead>
+            <tbody>
+              <tr><td>ORD-001</td><td>Order Received</td><td>2024-01-01 09:00</td><td>Sales</td></tr>
+              <tr><td>ORD-001</td><td>Credit Check</td><td>2024-01-01 14:30</td><td>Finance</td></tr>
+              <tr><td>ORD-001</td><td>Approved</td><td>2024-01-02 10:00</td><td>Manager</td></tr>
+              <tr><td>ORD-001</td><td>Shipped</td><td>2024-01-03 08:00</td><td>Warehouse</td></tr>
+              <tr><td>ORD-002</td><td>Order Received</td><td>2024-01-01 11:00</td><td>Sales</td></tr>
+              <tr><td>ORD-002</td><td>Credit Check</td><td>2024-01-03 09:00</td><td>Finance</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-steps">
+          <div class="info-step">
+            <div class="step-num">1</div>
+            <div><strong>Load</strong> your event log CSV</div>
+          </div>
+          <div class="info-step">
+            <div class="step-num">2</div>
+            <div><strong>Discover</strong> actual process flows automatically</div>
+          </div>
+          <div class="info-step">
+            <div class="step-num">3</div>
+            <div><strong>Find</strong> bottlenecks & inefficiencies</div>
+          </div>
+          <div class="info-step">
+            <div class="step-num">4</div>
+            <div><strong>Optimize</strong> your business process</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW: OVERVIEW - KPI CARDS + SUMMARY CHARTS
+  ============================================================ -->
+  <section class="view" id="view-overview">
+    <div class="kpi-grid" id="kpiGrid">
+      <div class="kpi-card" id="kpi-cases">
+        <div class="kpi-icon">📦</div>
+        <div class="kpi-content">
+          <div class="kpi-value" id="kpiTotalCases">—</div>
+          <div class="kpi-label">Total Cases</div>
+          <div class="kpi-trend positive" id="kpiCasesTrend"></div>
+        </div>
+      </div>
+      <div class="kpi-card" id="kpi-events">
+        <div class="kpi-icon">⚡</div>
+        <div class="kpi-content">
+          <div class="kpi-value" id="kpiTotalEvents">—</div>
+          <div class="kpi-label">Total Events</div>
+        </div>
+      </div>
+      <div class="kpi-card" id="kpi-duration">
+        <div class="kpi-icon">⏱️</div>
+        <div class="kpi-content">
+          <div class="kpi-value" id="kpiAvgDuration">—</div>
+          <div class="kpi-label">Avg Case Duration</div>
+        </div>
+      </div>
+      <div class="kpi-card" id="kpi-activities">
+        <div class="kpi-icon">🔀</div>
+        <div class="kpi-content">
+          <div class="kpi-value" id="kpiActivities">—</div>
+          <div class="kpi-label">Unique Activities</div>
+        </div>
+      </div>
+      <div class="kpi-card" id="kpi-bottleneck">
+        <div class="kpi-icon">🚨</div>
+        <div class="kpi-content">
+          <div class="kpi-value" id="kpiBottleneckActivity">—</div>
+          <div class="kpi-label">Top Bottleneck</div>
+        </div>
+      </div>
+      <div class="kpi-card" id="kpi-variants">
+        <div class="kpi-icon">🌿</div>
+        <div class="kpi-content">
+          <div class="kpi-value" id="kpiVariants">—</div>
+          <div class="kpi-label">Process Variants</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <h3>📈 Cases Over Time</h3>
+          <span class="chart-subtitle">Event volume by day</span>
+        </div>
+        <div class="chart-canvas-wrap"><canvas id="chartCasesOverTime"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>🔄 Activity Frequency</h3>
+          <span class="chart-subtitle">Most common steps</span>
+        </div>
+        <div class="chart-canvas-wrap"><canvas id="chartActivityFreq"></canvas></div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>⏳ Duration Distribution</h3>
+          <span class="chart-subtitle">Case completion times</span>
+        </div>
+        <div class="chart-canvas-wrap"><canvas id="chartDurationDist"></canvas></div>
+      </div>
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <h3>🕐 Avg Wait Time per Activity</h3>
+          <span class="chart-subtitle">Hours waiting at each step — higher = bottleneck</span>
+        </div>
+        <div class="chart-canvas-wrap"><canvas id="chartWaitTime"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW: PROCESS MAP - THE HEART OF PROCESS MINING
+  ============================================================ -->
+  <section class="view" id="view-process-map">
+    <div class="process-map-toolbar">
+      <div class="toolbar-group">
+        <label>Min Edge Frequency:</label>
+        <input type="range" id="edgeFreqSlider" min="1" max="100" value="1" />
+        <span id="edgeFreqValue">1</span>
+      </div>
+      <div class="toolbar-group">
+        <label>Color by:</label>
+        <select id="colorBySelect">
+          <option value="frequency">Frequency</option>
+          <option value="duration">Avg Duration</option>
+        </select>
+      </div>
+      <div class="toolbar-group">
+        <button class="btn-secondary" id="resetMapBtn">🔄 Reset View</button>
+        <button class="btn-secondary" id="fitMapBtn">⊡ Fit View</button>
+      </div>
+      <div class="toolbar-group">
+        <span class="legend-item"><span class="legend-dot green"></span> Start/End</span>
+        <span class="legend-item"><span class="legend-dot orange"></span> High Traffic</span>
+        <span class="legend-item"><span class="legend-dot red"></span> Bottleneck</span>
+      </div>
+    </div>
+
+    <div class="process-map-container">
+      <svg id="processMapSVG"></svg>
+      <div class="map-tooltip" id="mapTooltip" style="display:none;"></div>
+    </div>
+
+    <div class="process-map-stats">
+      <div class="stat-pill" id="mapStatVariants">—</div>
+      <div class="stat-pill" id="mapStatEdges">—</div>
+      <div class="stat-pill" id="mapStatHappyPath">—</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW: BOTTLENECKS - WHERE PROCESS SLOWS DOWN
+  ============================================================ -->
+  <section class="view" id="view-bottlenecks">
+    <div class="section-intro">
+      <h2>🚨 Bottleneck Analysis</h2>
+      <p>These are the steps where cases spend the most time <em>waiting</em>. Fixing these gives you the biggest ROI.</p>
+    </div>
+
+    <div class="bottleneck-grid" id="bottleneckGrid">
+      <!-- Dynamically populated -->
+    </div>
+
+    <div class="charts-row" style="margin-top:24px;">
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <h3>⏱️ Transition Duration Heatmap</h3>
+          <span class="chart-subtitle">Avg hours between activity pairs — dark = slow</span>
+        </div>
+        <div id="heatmapContainer" style="overflow:auto;"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>📊 Rework Detection</h3>
+          <span class="chart-subtitle">Activities that repeat within a case</span>
+        </div>
+        <div class="chart-canvas-wrap"><canvas id="chartRework"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW: CASE EXPLORER - DRILL DOWN INTO INDIVIDUAL CASES
+  ============================================================ -->
+  <section class="view" id="view-cases">
+    <div class="case-explorer-layout">
+      <div class="case-list-panel">
+        <div class="panel-header">
+          <h3>Cases</h3>
+          <input type="text" class="search-input" id="caseSearch" placeholder="Search case ID..." />
+        </div>
+        <div class="case-sort-bar">
+          <button class="sort-btn active" data-sort="duration-desc">⬇ Slowest</button>
+          <button class="sort-btn" data-sort="duration-asc">⬆ Fastest</button>
+          <button class="sort-btn" data-sort="events-desc">📋 Most Steps</button>
+        </div>
+        <div class="case-list" id="caseList">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <div class="case-detail-panel" id="caseDetailPanel">
+        <div class="case-detail-placeholder">
+          <div class="placeholder-icon">👈</div>
+          <p>Select a case from the list to view its full timeline</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW: RESOURCES - WHO IS DOING WHAT
+  ============================================================ -->
+  <section class="view" id="view-resources">
+    <div class="section-intro">
+      <h2>👥 Resource Analysis</h2>
+      <p>Understand workload distribution across your team and identify overloaded resources.</p>
+    </div>
+
+    <div class="resource-grid" id="resourceGrid">
+      <!-- Populated dynamically -->
+    </div>
+
+    <div class="charts-row" style="margin-top:24px;">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>📊 Events per Resource</h3>
+        </div>
+        <div class="chart-canvas-wrap"><canvas id="chartResourceLoad"></canvas></div>
+      </div>
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <h3>🕐 Resource Activity Matrix</h3>
+          <span class="chart-subtitle">Which resource handles which activities</span>
+        </div>
+        <div id="resourceMatrixContainer"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loadingOverlay" style="display:none;">
+  <div class="loading-card">
+    <div class="loading-spinner"></div>
+    <p id="loadingMsg">Analyzing process data...</p>
+    <div class="loading-steps" id="loadingSteps"></div>
+  </div>
+</div>
+
+<!-- Tooltip for charts -->
+<div class="global-tooltip" id="globalTooltip" style="display:none;"></div>
+
+<!-- Scripts: Chart.js for charts, D3 for process map, then our logic -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="static/js/data_generator.js"></script>
+<script src="static/js/process_engine.js"></script>
+<script src="static/js/process_map.js"></script>
+<script src="static/js/dashboard.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,2260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ProcessMind — Complete Code Explanation Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  :root {
+    --blue: #2563eb;
+    --blue-light: #eff6ff;
+    --blue-mid: #dbeafe;
+    --purple: #7c3aed;
+    --purple-light: #f5f3ff;
+    --green: #059669;
+    --green-light: #ecfdf5;
+    --orange: #d97706;
+    --orange-light: #fffbeb;
+    --red: #dc2626;
+    --red-light: #fef2f2;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #fff;
+    color: var(--gray-900);
+    line-height: 1.7;
+    font-size: 14px;
+  }
+
+  /* ===== COVER PAGE ===== */
+  .cover {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #0f172a 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 40px;
+    page-break-after: always;
+  }
+
+  .cover-badge {
+    background: rgba(79,142,247,0.15);
+    border: 1px solid rgba(79,142,247,0.3);
+    color: #60a5fa;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .cover h1 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .cover h1 span {
+    background: linear-gradient(90deg, #60a5fa, #a78bfa, #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .cover-subtitle {
+    font-size: 1.15rem;
+    color: #94a3b8;
+    max-width: 600px;
+    margin-bottom: 48px;
+    line-height: 1.6;
+  }
+
+  .cover-meta {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+
+  .cover-meta-item {
+    text-align: center;
+  }
+
+  .cover-meta-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #60a5fa;
+  }
+
+  .cover-meta-label {
+    font-size: 0.78rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+  }
+
+  .cover-files {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    max-width: 700px;
+  }
+
+  .cover-file-pill {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #94a3b8;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ===== TABLE OF CONTENTS ===== */
+  .toc {
+    padding: 60px 80px;
+    page-break-after: always;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .toc h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: 8px;
+  }
+
+  .toc-subtitle {
+    color: var(--gray-500);
+    margin-bottom: 40px;
+    font-size: 0.9rem;
+  }
+
+  .toc-item {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--gray-200);
+  }
+
+  .toc-num {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--blue);
+    background: var(--blue-light);
+    padding: 2px 8px;
+    border-radius: 4px;
+    min-width: 32px;
+    text-align: center;
+  }
+
+  .toc-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    flex: 1;
+  }
+
+  .toc-file {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--gray-500);
+  }
+
+  .toc-desc {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    margin-top: 2px;
+  }
+
+  /* ===== CONCEPT BOX ===== */
+  .concept-box {
+    background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+    border-left: 4px solid var(--blue);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin: 20px 0;
+  }
+
+  .concept-box h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+
+  .concept-box p {
+    font-size: 0.88rem;
+    color: var(--gray-700);
+    line-height: 1.6;
+  }
+
+  /* ===== CHAPTER / FILE SECTION ===== */
+  .chapter {
+    padding: 0 80px 60px;
+    max-width: 900px;
+    margin: 0 auto;
+    page-break-before: always;
+  }
+
+  .chapter-header {
+    background: linear-gradient(135deg, #0f172a, #1e1b4b);
+    color: #fff;
+    padding: 36px 40px;
+    border-radius: 16px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chapter-header::after {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    background: rgba(79,142,247,0.1);
+    border-radius: 50%;
+  }
+
+  .chapter-num {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #60a5fa;
+    margin-bottom: 8px;
+  }
+
+  .chapter-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+
+  .chapter-file {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    color: #94a3b8;
+    margin-bottom: 12px;
+  }
+
+  .chapter-desc {
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    line-height: 1.6;
+    max-width: 600px;
+  }
+
+  /* ===== CODE BLOCK WITH EXPLANATION ===== */
+  .code-section {
+    margin-bottom: 32px;
+  }
+
+  .code-section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--gray-100);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .code-section-title .section-badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-setup    { background: #dbeafe; color: #1d4ed8; }
+  .badge-data     { background: #dcfce7; color: #166534; }
+  .badge-logic    { background: #fef3c7; color: #92400e; }
+  .badge-render   { background: #f3e8ff; color: #6b21a8; }
+  .badge-utility  { background: #fee2e2; color: #991b1b; }
+  .badge-config   { background: #e0f2fe; color: #0369a1; }
+
+  .code-block {
+    background: #0f172a;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+  }
+
+  .code-block-header {
+    background: rgba(255,255,255,0.05);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .code-block-header span {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-red { background: #ef4444; }
+  .dot-yellow { background: #f59e0b; }
+  .dot-green { background: #10b981; }
+
+  .code-body {
+    padding: 16px;
+  }
+
+  .code-line {
+    display: flex;
+    gap: 0;
+    min-height: 20px;
+  }
+
+  .line-num {
+    color: #334155;
+    min-width: 36px;
+    text-align: right;
+    padding-right: 16px;
+    user-select: none;
+    font-size: 0.72rem;
+    line-height: 1.6;
+  }
+
+  .line-code {
+    color: #e2e8f0;
+    flex: 1;
+    white-space: pre;
+    line-height: 1.6;
+  }
+
+  /* Syntax colors */
+  .kw   { color: #c084fc; }   /* keyword: const, let, function, return */
+  .fn   { color: #60a5fa; }   /* function names */
+  .str  { color: #4ade80; }   /* strings */
+  .num  { color: #fb923c; }   /* numbers */
+  .cmt  { color: #475569; font-style: italic; }  /* comments */
+  .obj  { color: #f9a8d4; }   /* object/property names */
+  .op   { color: #94a3b8; }   /* operators */
+  .cls  { color: #fbbf24; }   /* class names */
+  .punc { color: #94a3b8; }   /* punctuation */
+
+  /* ===== EXPLANATION PANEL ===== */
+  .explanation {
+    margin-top: 0;
+  }
+
+  .explain-item {
+    display: flex;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+
+  .explain-item:last-child { border-bottom: none; }
+
+  .explain-lines {
+    min-width: 64px;
+    text-align: right;
+  }
+
+  .line-badge {
+    display: inline-block;
+    background: var(--gray-100);
+    color: var(--gray-600);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .explain-content {}
+
+  .explain-code-snippet {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    background: var(--gray-100);
+    color: var(--gray-800);
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 4px;
+  }
+
+  .explain-text {
+    font-size: 0.85rem;
+    color: var(--gray-700);
+    line-height: 1.6;
+  }
+
+  .explain-text strong { color: var(--gray-900); }
+  .explain-text code {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--gray-100);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    color: var(--blue);
+  }
+
+  /* ===== ANALOGY BOX ===== */
+  .analogy {
+    background: var(--orange-light);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-size: 0.82rem;
+    color: #78350f;
+  }
+
+  .analogy::before {
+    content: '💡 Real-world analogy: ';
+    font-weight: 700;
+  }
+
+  /* ===== WARNING BOX ===== */
+  .warn-box {
+    background: var(--red-light);
+    border-left: 3px solid var(--red);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-size: 0.82rem;
+    color: #7f1d1d;
+  }
+
+  .warn-box::before {
+    content: '⚠️ Common mistake: ';
+    font-weight: 700;
+  }
+
+  /* ===== TIP BOX ===== */
+  .tip-box {
+    background: var(--green-light);
+    border-left: 3px solid var(--green);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-size: 0.82rem;
+    color: #064e3b;
+  }
+
+  .tip-box::before {
+    content: '✅ Pro tip: ';
+    font-weight: 700;
+  }
+
+  /* ===== SQL COMPARISON ===== */
+  .sql-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 12px 0;
+  }
+
+  .sql-box, .js-box {
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+  }
+
+  .sql-box-header, .js-box-header {
+    padding: 6px 12px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .sql-box-header { background: #1e3a5f; color: #60a5fa; }
+  .js-box-header  { background: #1a2e1a; color: #4ade80; }
+
+  .sql-box-body, .js-box-body {
+    padding: 10px 12px;
+    white-space: pre;
+    line-height: 1.5;
+    overflow-x: auto;
+  }
+
+  .sql-box-body { background: #0c1929; color: #93c5fd; }
+  .js-box-body  { background: #0a1a0a; color: #86efac; }
+
+  /* ===== DIVIDER ===== */
+  .divider {
+    height: 1px;
+    background: var(--gray-200);
+    margin: 40px 0;
+  }
+
+  /* ===== PAGE BREAK ===== */
+  @media print {
+    .page-break { page-break-after: always; }
+    body { font-size: 12px; }
+    .chapter { padding: 0 40px 40px; }
+    .toc { padding: 40px; }
+  }
+
+  /* ===== SUBSECTION ===== */
+  .subsection {
+    margin-bottom: 40px;
+  }
+
+  .subsection-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .subsection-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-200);
+  }
+
+  /* ===== FLOW DIAGRAM ===== */
+  .flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 16px;
+    background: var(--gray-50);
+    border-radius: 8px;
+    margin: 12px 0;
+  }
+
+  .flow-node {
+    background: var(--blue-mid);
+    border: 1px solid #93c5fd;
+    color: #1e40af;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .flow-arrow {
+    color: var(--gray-400);
+    font-size: 1.1rem;
+  }
+
+  /* Summary footer */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  .summary-card {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .summary-card-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray-500);
+    margin-bottom: 8px;
+  }
+
+  .summary-card-value {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--blue);
+  }
+
+</style>
+</head>
+<body>
+
+<!-- =========================================================
+     COVER PAGE
+========================================================= -->
+<div class="cover">
+  <div class="cover-badge">📘 Beginner's Code Guide</div>
+  <h1>⚡ <span>ProcessMind</span><br/>Business Process Analytics</h1>
+  <p class="cover-subtitle">
+    A complete line-by-line explanation of every file in the dashboard —
+    written so a total beginner can understand exactly what every single
+    line of code does and <em>why</em>.
+  </p>
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <div class="cover-meta-value">6</div>
+      <div class="cover-meta-label">Files Explained</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="cover-meta-value">~1,400</div>
+      <div class="cover-meta-label">Lines of Code</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="cover-meta-value">50+</div>
+      <div class="cover-meta-label">Concepts Taught</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="cover-meta-value">0</div>
+      <div class="cover-meta-label">Prior Experience Needed</div>
+    </div>
+  </div>
+  <div class="cover-files">
+    <span class="cover-file-pill">index.html</span>
+    <span class="cover-file-pill">dashboard.css</span>
+    <span class="cover-file-pill">data_generator.js</span>
+    <span class="cover-file-pill">process_engine.js</span>
+    <span class="cover-file-pill">process_map.js</span>
+    <span class="cover-file-pill">dashboard.js</span>
+  </div>
+</div>
+
+<!-- =========================================================
+     TABLE OF CONTENTS
+========================================================= -->
+<div class="toc">
+  <h2>📋 Table of Contents</h2>
+  <p class="toc-subtitle">Each chapter covers one file completely, line by line.</p>
+
+  <div class="toc-item">
+    <span class="toc-num">CH 1</span>
+    <div>
+      <div class="toc-name">index.html — The Blueprint</div>
+      <div class="toc-file">process_dashboard/index.html</div>
+      <div class="toc-desc">HTML structure, navigation, views, and how pages work without page reloads</div>
+    </div>
+  </div>
+  <div class="toc-item">
+    <span class="toc-num">CH 2</span>
+    <div>
+      <div class="toc-name">dashboard.css — The Stylist</div>
+      <div class="toc-file">static/css/dashboard.css</div>
+      <div class="toc-desc">CSS variables, dark theme, layout, cards, animations, and responsive design</div>
+    </div>
+  </div>
+  <div class="toc-item">
+    <span class="toc-num">CH 3</span>
+    <div>
+      <div class="toc-name">data_generator.js — The Data Factory</div>
+      <div class="toc-file">static/js/data_generator.js</div>
+      <div class="toc-desc">Generating realistic business event logs, CSV parsing, random distributions</div>
+    </div>
+  </div>
+  <div class="toc-item">
+    <span class="toc-num">CH 4</span>
+    <div>
+      <div class="toc-name">process_engine.js — The Brain</div>
+      <div class="toc-file">static/js/process_engine.js</div>
+      <div class="toc-desc">SQL-style aggregations, graph theory, bottleneck detection, process variant discovery</div>
+    </div>
+  </div>
+  <div class="toc-item">
+    <span class="toc-num">CH 5</span>
+    <div>
+      <div class="toc-name">process_map.js — The Artist</div>
+      <div class="toc-file">static/js/process_map.js</div>
+      <div class="toc-desc">D3.js SVG rendering, topological graph layout, interactive nodes and edges</div>
+    </div>
+  </div>
+  <div class="toc-item">
+    <span class="toc-num">CH 6</span>
+    <div>
+      <div class="toc-name">dashboard.js — The Controller</div>
+      <div class="toc-file">static/js/dashboard.js</div>
+      <div class="toc-desc">Event listeners, Chart.js charts, animations, view management, file upload</div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     CHAPTER 1: index.html
+========================================================= -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">Chapter 1 · index.html</div>
+    <div class="chapter-title">The Blueprint 🏛️</div>
+    <div class="chapter-file">process_dashboard/index.html</div>
+    <div class="chapter-desc">
+      HTML is the skeleton of every webpage. Every element you see — buttons,
+      charts, cards — starts as an HTML tag. This file defines the structure
+      of the entire dashboard: 5 views, a sidebar, charts, and forms.
+    </div>
+  </div>
+
+  <div class="concept-box">
+    <h4>🧠 Before You Start: What is HTML?</h4>
+    <p>HTML = HyperText Markup Language. It uses &lt;tags&gt; to describe content.
+    Think of it like a Word document's structure — headings, paragraphs, tables —
+    except browsers understand it. Each &lt;tag&gt; has an opening <code>&lt;div&gt;</code>
+    and closing <code>&lt;/div&gt;</code>. Tags can have <em>attributes</em> like
+    <code>id="myButton"</code> or <code>class="card"</code> which CSS/JS use to style/control them.</p>
+  </div>
+
+  <!-- DOCTYPE + HEAD -->
+  <div class="subsection">
+    <div class="subsection-title">Part 1 — Document Setup</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>index.html — Lines 1–10</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">1</span><span class="line-code"><span class="kw">&lt;!DOCTYPE html&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">2</span><span class="line-code"><span class="kw">&lt;html</span> <span class="obj">lang</span>=<span class="str">"en"</span><span class="kw">&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">3</span><span class="line-code"><span class="kw">&lt;head&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">4</span><span class="line-code">  <span class="kw">&lt;meta</span> <span class="obj">charset</span>=<span class="str">"UTF-8"</span> <span class="kw">/&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">5</span><span class="line-code">  <span class="kw">&lt;meta</span> <span class="obj">name</span>=<span class="str">"viewport"</span> <span class="obj">content</span>=<span class="str">"width=device-width, initial-scale=1.0"</span> <span class="kw">/&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">6</span><span class="line-code">  <span class="kw">&lt;title&gt;</span>ProcessMind — Business Process Analytics<span class="kw">&lt;/title&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">7</span><span class="line-code">  <span class="kw">&lt;meta</span> <span class="obj">name</span>=<span class="str">"description"</span> <span class="obj">content</span>=<span class="str">"Business process analytics..."</span> <span class="kw">/&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">8</span><span class="line-code">  <span class="kw">&lt;link</span> <span class="obj">rel</span>=<span class="str">"preconnect"</span> <span class="obj">href</span>=<span class="str">"https://fonts.googleapis.com"</span> <span class="kw">/&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">9</span><span class="line-code">  <span class="kw">&lt;link</span> <span class="obj">href</span>=<span class="str">"https://fonts.googleapis.com/css2?family=Inter..."</span> <span class="kw">/&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">10</span><span class="line-code">  <span class="kw">&lt;link</span> <span class="obj">rel</span>=<span class="str">"stylesheet"</span> <span class="obj">href</span>=<span class="str">"static/css/dashboard.css"</span> <span class="kw">/&gt;</span></span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 1</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">&lt;!DOCTYPE html&gt;</div>
+          <div class="explain-text">This is NOT a tag — it's a <strong>declaration</strong>. It tells the browser: "Hey, this file follows modern HTML5 rules." Always the very first line. Without it, browsers go into "quirks mode" and render things differently.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 2</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">&lt;html lang="en"&gt;</div>
+          <div class="explain-text">The <strong>root element</strong> — every single other element lives inside this. <code>lang="en"</code> tells screen readers and search engines the page is in English. It wraps everything until &lt;/html&gt; at the very end of the file.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 3</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">&lt;head&gt;</div>
+          <div class="explain-text">The <strong>head section</strong> is invisible to users. It contains metadata (info about the page), links to CSS stylesheets, links to fonts, and the page title. Nothing inside &lt;head&gt; appears on screen directly.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 4</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">&lt;meta charset="UTF-8" /&gt;</div>
+          <div class="explain-text"><strong>Character encoding</strong>. UTF-8 supports every character on earth — English letters, Hindi, Chinese, emojis, math symbols. Without this, special characters like © or é appear as garbage symbols.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 5</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">name="viewport" content="width=device-width, initial-scale=1.0"</div>
+          <div class="explain-text"><strong>Mobile responsiveness</strong>. Without this, mobile phones would zoom out and show a tiny desktop version of the page. This tells the browser: "make the viewport (visible area) match the device screen width, and don't zoom in/out initially."</div>
+          <div class="analogy">A printed map that automatically resizes to fit the paper size.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 6</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">&lt;title&gt;ProcessMind...&lt;/title&gt;</div>
+          <div class="explain-text">The <strong>browser tab title</strong>. This text appears in the browser tab, window title bar, and search engine results (Google shows this as the blue link text).</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 7</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">&lt;meta name="description" content="..."&gt;</div>
+          <div class="explain-text"><strong>SEO description</strong>. Google shows this as the grey text under the page title in search results. It doesn't affect ranking much but affects click-through rates.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 8</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">&lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;</div>
+          <div class="explain-text"><strong>Performance optimization</strong>. <code>preconnect</code> tells the browser to establish a TCP/DNS connection to Google Fonts EARLY — before the font is actually needed. This saves ~100ms of connection time, making fonts load faster.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 9</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">&lt;link href="https://fonts.googleapis.com/css2?family=Inter..."&gt;</div>
+          <div class="explain-text">Downloads the <strong>Inter and JetBrains Mono fonts</strong> from Google Fonts CDN. We load specific font weights (300, 400, 500, 600, 700, 800) to avoid downloading unnecessary font data. JetBrains Mono is used for code/numbers.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 10</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">&lt;link rel="stylesheet" href="static/css/dashboard.css"&gt;</div>
+          <div class="explain-text">Links our CSS file. <code>rel="stylesheet"</code> = relationship type. <code>href</code> = the file path. This is a <strong>relative path</strong> — it means "look in the static/css folder inside the same folder as this HTML file."</div>
+          <div class="warn-box">If this path is wrong, ALL styling breaks. The page will look like plain black text on white background.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="subsection">
+    <div class="subsection-title">Part 2 — The Sidebar Navigation</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>index.html — Sidebar (simplified)</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">17</span><span class="line-code"><span class="kw">&lt;nav</span> <span class="obj">class</span>=<span class="str">"sidebar"</span> <span class="obj">id</span>=<span class="str">"sidebar"</span><span class="kw">&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">18</span><span class="line-code">  <span class="kw">&lt;div</span> <span class="obj">class</span>=<span class="str">"sidebar-logo"</span><span class="kw">&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">19</span><span class="line-code">    <span class="kw">&lt;div</span> <span class="obj">class</span>=<span class="str">"logo-icon"</span><span class="kw">&gt;</span>⚡<span class="kw">&lt;/div&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">20</span><span class="line-code">    <span class="kw">&lt;span</span> <span class="obj">class</span>=<span class="str">"logo-text"</span><span class="kw">&gt;</span>ProcessMind<span class="kw">&lt;/span&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">21</span><span class="line-code">  <span class="kw">&lt;/div&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">23</span><span class="line-code">  <span class="kw">&lt;a</span> <span class="obj">href</span>=<span class="str">"#"</span> <span class="obj">class</span>=<span class="str">"nav-item active"</span> <span class="obj">data-view</span>=<span class="str">"overview"</span><span class="kw">&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">24</span><span class="line-code">    <span class="kw">&lt;span</span> <span class="obj">class</span>=<span class="str">"nav-icon"</span><span class="kw">&gt;</span>📊<span class="kw">&lt;/span&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">25</span><span class="line-code">    <span class="kw">&lt;span&gt;</span>Overview<span class="kw">&lt;/span&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">26</span><span class="line-code">  <span class="kw">&lt;/a&gt;</span></span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 17</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">&lt;nav class="sidebar" id="sidebar"&gt;</div>
+          <div class="explain-text">
+            <strong>&lt;nav&gt;</strong> is a semantic HTML5 element — it specifically means "navigation". Browsers and screen readers understand this is a navigation area. <br/><br/>
+            <code>class="sidebar"</code> → CSS uses this to apply styles (position, width, background-color).<br/>
+            <code>id="sidebar"</code> → JavaScript uses this to find the element with <code>document.getElementById("sidebar")</code>. IDs must be unique per page.
+          </div>
+          <div class="analogy">class = a group label (many people can share a class). id = a Social Security Number (unique to one element).</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 23</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">&lt;a href="#" class="nav-item active" data-view="overview"&gt;</div>
+          <div class="explain-text">
+            <strong>&lt;a&gt;</strong> = anchor tag = a hyperlink. <code>href="#"</code> means "link to nowhere" — we prevent the actual navigation in JavaScript.<br/><br/>
+            <code>class="nav-item active"</code> — two classes! Elements can have multiple classes separated by spaces. "nav-item" gives the base style; "active" adds the blue highlight.<br/><br/>
+            <code>data-view="overview"</code> — a <strong>custom data attribute</strong>. HTML allows you to store any data on elements using <code>data-*</code>. JavaScript reads this with <code>item.dataset.view</code> to know which view to show.
+          </div>
+          <div class="tip-box">data-* attributes are like sticky notes on HTML elements. They let you attach information that JavaScript can read later.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEWS / SECTIONS -->
+  <div class="subsection">
+    <div class="subsection-title">Part 3 — The SPA Views (Single-Page Application Pattern)</div>
+
+    <div class="concept-box">
+      <h4>🧠 Key Concept: Single-Page Application (SPA)</h4>
+      <p>Traditional websites load a new HTML file for every page. SPAs load ONE HTML file and use JavaScript to show/hide different sections. This is how Gmail, Twitter, and most modern apps work. Our 5 "pages" are actually 5 &lt;section&gt; elements — only one has <code>class="view active"</code> at a time.</p>
+    </div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>index.html — Section/View pattern</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">80</span><span class="line-code"><span class="cmt">&lt;!-- View 1: Upload --&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">81</span><span class="line-code"><span class="kw">&lt;section</span> <span class="obj">class</span>=<span class="str">"view active"</span> <span class="obj">id</span>=<span class="str">"view-upload"</span><span class="kw">&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">82</span><span class="line-code">  ... upload page content ...</span></div>
+        <div class="code-line"><span class="line-num">83</span><span class="line-code"><span class="kw">&lt;/section&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">85</span><span class="line-code"><span class="cmt">&lt;!-- View 2: Overview --&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">86</span><span class="line-code"><span class="kw">&lt;section</span> <span class="obj">class</span>=<span class="str">"view"</span> <span class="obj">id</span>=<span class="str">"view-overview"</span><span class="kw">&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">87</span><span class="line-code">  ... dashboard content ...</span></div>
+        <div class="code-line"><span class="line-num">88</span><span class="line-code"><span class="kw">&lt;/section&gt;</span></span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 81</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">class="view active"</div>
+          <div class="explain-text">The CSS rule <code>.view { display: none }</code> hides all sections by default. The rule <code>.view.active { display: block }</code> shows only the one with "active". JavaScript adds/removes the "active" class to switch views — no page reload needed!</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 86</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">class="view" (no active)</div>
+          <div class="explain-text">This section is hidden. When the user clicks "Overview" in the sidebar, JavaScript runs: <code>document.getElementById('view-upload').classList.remove('active')</code> and <code>document.getElementById('view-overview').classList.add('active')</code>. Instant switch!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <div class="subsection">
+    <div class="subsection-title">Part 4 — Loading JavaScript Files</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>index.html — Bottom scripts</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">200</span><span class="line-code"><span class="kw">&lt;script</span> <span class="obj">src</span>=<span class="str">"https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"</span><span class="kw">&gt;&lt;/script&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">201</span><span class="line-code"><span class="kw">&lt;script</span> <span class="obj">src</span>=<span class="str">"https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"</span><span class="kw">&gt;&lt;/script&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">202</span><span class="line-code"><span class="kw">&lt;script</span> <span class="obj">src</span>=<span class="str">"static/js/data_generator.js"</span><span class="kw">&gt;&lt;/script&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">203</span><span class="line-code"><span class="kw">&lt;script</span> <span class="obj">src</span>=<span class="str">"static/js/process_engine.js"</span><span class="kw">&gt;&lt;/script&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">204</span><span class="line-code"><span class="kw">&lt;script</span> <span class="obj">src</span>=<span class="str">"static/js/process_map.js"</span><span class="kw">&gt;&lt;/script&gt;</span></span></div>
+        <div class="code-line"><span class="line-num">205</span><span class="line-code"><span class="kw">&lt;script</span> <span class="obj">src</span>=<span class="str">"static/js/dashboard.js"</span><span class="kw">&gt;&lt;/script&gt;</span></span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 200</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">Chart.js from CDN</div>
+          <div class="explain-text">Chart.js is a free library for creating charts (bars, lines, pie). CDN = Content Delivery Network — we load it from the internet instead of hosting it ourselves. Faster for users because their browser may already have it cached from other websites.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 201</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">D3.js from CDN</div>
+          <div class="explain-text">D3.js (Data-Driven Documents) — the most powerful data visualization library for the web. Used for our interactive process map. Much more complex than Chart.js but can create anything imaginable.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Order matters!</span></div>
+        <div class="explain-content">
+          <div class="explain-text"><strong>Scripts load in order, top to bottom.</strong> Chart.js and D3 must load FIRST (lines 200-201) before our code (lines 202-205) because our code uses <code>Chart</code> and <code>d3</code> variables that those libraries create. Scripts at the BOTTOM of &lt;body&gt; ensures the HTML is fully loaded before JS runs.</div>
+          <div class="warn-box">Putting scripts in &lt;head&gt; causes errors because the HTML elements (like &lt;canvas&gt;) don't exist yet when the script runs.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     CHAPTER 2: dashboard.css
+========================================================= -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">Chapter 2 · dashboard.css</div>
+    <div class="chapter-title">The Stylist 🎨</div>
+    <div class="chapter-file">static/css/dashboard.css</div>
+    <div class="chapter-desc">
+      CSS = Cascading Style Sheets. It controls how every element looks:
+      colors, fonts, sizes, spacing, animations. Without CSS, the page is
+      just black text on white background. This file has 800+ lines creating
+      the dark premium look.
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 1 — Reset and CSS Variables (Design Tokens)</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>dashboard.css — Lines 1–60</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">1</span><span class="line-code"><span class="cls">*</span>, <span class="cls">*::before</span>, <span class="cls">*::after</span> {</span></div>
+        <div class="code-line"><span class="line-num">2</span><span class="line-code">  <span class="obj">box-sizing</span>: <span class="str">border-box</span>;</span></div>
+        <div class="code-line"><span class="line-num">3</span><span class="line-code">  <span class="obj">margin</span>: <span class="num">0</span>;</span></div>
+        <div class="code-line"><span class="line-num">4</span><span class="line-code">  <span class="obj">padding</span>: <span class="num">0</span>;</span></div>
+        <div class="code-line"><span class="line-num">5</span><span class="line-code">}</span></div>
+        <div class="code-line"><span class="line-num">7</span><span class="line-code"><span class="cls">:root</span> {</span></div>
+        <div class="code-line"><span class="line-num">8</span><span class="line-code">  <span class="op">--bg-primary</span>:    <span class="str">#0a0d14</span>;</span></div>
+        <div class="code-line"><span class="line-num">9</span><span class="line-code">  <span class="op">--bg-secondary</span>:  <span class="str">#0f1420</span>;</span></div>
+        <div class="code-line"><span class="line-num">10</span><span class="line-code">  <span class="op">--accent-blue</span>:   <span class="str">#4f8ef7</span>;</span></div>
+        <div class="code-line"><span class="line-num">11</span><span class="line-code">  <span class="op">--accent-green</span>:  <span class="str">#10b981</span>;</span></div>
+        <div class="code-line"><span class="line-num">12</span><span class="line-code">  <span class="op">--accent-red</span>:    <span class="str">#ef4444</span>;</span></div>
+        <div class="code-line"><span class="line-num">13</span><span class="line-code">  <span class="op">--grad-blue</span>: <span class="fn">linear-gradient</span>(<span class="num">135deg</span>, <span class="str">#4f8ef7</span> <span class="num">0%</span>, <span class="str">#8b5cf6</span> <span class="num">100%</span>);</span></div>
+        <div class="code-line"><span class="line-num">14</span><span class="line-code">  <span class="op">--shadow-glow</span>: <span class="num">0</span> <span class="num">0</span> <span class="num">30px</span> <span class="fn">rgba</span>(<span class="num">79,142,247,0.15</span>);</span></div>
+        <div class="code-line"><span class="line-num">15</span><span class="line-code">  <span class="op">--sidebar-width</span>: <span class="num">240px</span>;</span></div>
+        <div class="code-line"><span class="line-num">16</span><span class="line-code">  <span class="op">--ease-fast</span>:    <span class="num">0.15s</span> <span class="fn">cubic-bezier</span>(<span class="num">0.4, 0, 0.2, 1</span>);</span></div>
+        <div class="code-line"><span class="line-num">17</span><span class="line-code">}</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 1–5</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">* { box-sizing: border-box; margin: 0; padding: 0; }</div>
+          <div class="explain-text">The <strong>Universal Reset</strong>. The <code>*</code> selector matches EVERY element on the page.<br/><br/>
+          <strong>box-sizing: border-box</strong> → By default, if you set a div to <code>width: 100px</code> and add <code>padding: 10px</code>, the total width becomes 120px (100 + 10 + 10). With border-box, padding is included inside the 100px. This makes layouts predictable.<br/><br/>
+          <strong>margin/padding: 0</strong> → Browsers add default spacing to elements (h1, p, ul). This resets all that to zero so we start from a clean slate.</div>
+          <div class="analogy">Resetting a canvas to white before painting, instead of painting over someone else's old painting.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 7</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">:root { }</div>
+          <div class="explain-text"><code>:root</code> is a special CSS selector that targets the very top element (&lt;html&gt;). Variables defined here are accessible EVERYWHERE in the stylesheet. This is the <strong>CSS Variables</strong> feature (also called Custom Properties).</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 8–12</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">--accent-blue: #4f8ef7;</div>
+          <div class="explain-text">CSS Variables start with <code>--</code>. <code>#4f8ef7</code> is a hex color code (6-digit hexadecimal = red, green, blue). To use it anywhere: <code>color: var(--accent-blue)</code>. If you want to change the blue color site-wide, change it HERE once — it updates everywhere automatically.</div>
+          <div class="analogy">Like a variable in math: x = 5. Use x everywhere, change x once to update all equations.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 13</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">--grad-blue: linear-gradient(135deg, #4f8ef7 0%, #8b5cf6 100%);</div>
+          <div class="explain-text">A <strong>CSS gradient</strong> that transitions from blue to purple at 135 degrees (diagonal). <code>0%</code> = starting point (pure blue), <code>100%</code> = ending point (pure purple). Used for buttons, KPI values, and glow effects.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 14</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">--shadow-glow: 0 0 30px rgba(79,142,247,0.15);</div>
+          <div class="explain-text"><strong>CSS box-shadow</strong> with 4 values: X-offset Y-offset blur-radius color. <code>rgba(79,142,247,0.15)</code> = the blue color (#4f8ef7 = rgb 79,142,247) at 15% opacity. This creates the subtle blue glow on hover.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 16</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">--ease-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);</div>
+          <div class="explain-text"><strong>Animation easing</strong>. <code>0.15s</code> = animation duration. <code>cubic-bezier(0.4, 0, 0.2, 1)</code> is the Google Material Design easing curve — it starts fast and slows down smoothly at the end (like a ball rolling to a stop).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 2 — CSS Grid Layout</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>dashboard.css — Body Grid Layout</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">60</span><span class="line-code"><span class="cls">body</span> {</span></div>
+        <div class="code-line"><span class="line-num">61</span><span class="line-code">  <span class="obj">display</span>: <span class="str">grid</span>;</span></div>
+        <div class="code-line"><span class="line-num">62</span><span class="line-code">  <span class="obj">grid-template-columns</span>: <span class="fn">var</span>(<span class="op">--sidebar-width</span>) <span class="num">1fr</span>;</span></div>
+        <div class="code-line"><span class="line-num">63</span><span class="line-code">  <span class="obj">grid-template-rows</span>: <span class="num">100vh</span>;</span></div>
+        <div class="code-line"><span class="line-num">64</span><span class="line-code">}</span></div>
+        <div class="code-line"><span class="line-num">66</span><span class="line-code"><span class="cls">.kpi-grid</span> {</span></div>
+        <div class="code-line"><span class="line-num">67</span><span class="line-code">  <span class="obj">display</span>: <span class="str">grid</span>;</span></div>
+        <div class="code-line"><span class="line-num">68</span><span class="line-code">  <span class="obj">grid-template-columns</span>: <span class="fn">repeat</span>(<span class="num">6</span>, <span class="num">1fr</span>);</span></div>
+        <div class="code-line"><span class="line-num">69</span><span class="line-code">  <span class="obj">gap</span>: <span class="num">16px</span>;</span></div>
+        <div class="code-line"><span class="line-num">70</span><span class="line-code">}</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 61–63</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">display: grid; grid-template-columns: 240px 1fr;</div>
+          <div class="explain-text"><strong>CSS Grid</strong> divides the page into columns/rows. <br/>
+          <code>240px 1fr</code> = two columns: first is exactly 240px (sidebar), second takes all remaining space (<code>1fr</code> = 1 fraction of available space).<br/>
+          <code>100vh</code> = 100% of the viewport height (the visible screen height).<br/><br/>
+          This is what creates the classic sidebar layout — left column is the menu, right column is the main content.</div>
+          <div class="analogy">Like a newspaper with a narrow left column for index/ads and a wide right column for articles.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 67–69</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">grid-template-columns: repeat(6, 1fr);</div>
+          <div class="explain-text"><code>repeat(6, 1fr)</code> = shorthand for <code>1fr 1fr 1fr 1fr 1fr 1fr</code> — creates 6 equal-width columns. <code>gap: 16px</code> = space between grid cells. This creates the 6 KPI cards in a row.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 3 — Animations and Transitions</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>dashboard.css — Animations</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">100</span><span class="line-code"><span class="cls">.view</span> {</span></div>
+        <div class="code-line"><span class="line-num">101</span><span class="line-code">  <span class="obj">display</span>: <span class="str">none</span>;</span></div>
+        <div class="code-line"><span class="line-num">102</span><span class="line-code">  <span class="obj">animation</span>: <span class="fn">fadeInUp</span> <span class="num">0.3s</span> <span class="str">ease</span>;</span></div>
+        <div class="code-line"><span class="line-num">103</span><span class="line-code">}</span></div>
+        <div class="code-line"><span class="line-num">104</span><span class="line-code"><span class="cls">.view.active</span> { <span class="obj">display</span>: <span class="str">block</span>; }</span></div>
+        <div class="code-line"><span class="line-num">106</span><span class="line-code"><span class="cls">@keyframes</span> <span class="fn">fadeInUp</span> {</span></div>
+        <div class="code-line"><span class="line-num">107</span><span class="line-code">  <span class="kw">from</span> { <span class="obj">opacity</span>: <span class="num">0</span>; <span class="obj">transform</span>: <span class="fn">translateY</span>(<span class="num">12px</span>); }</span></div>
+        <div class="code-line"><span class="line-num">108</span><span class="line-code">  <span class="kw">to</span>   { <span class="obj">opacity</span>: <span class="num">1</span>; <span class="obj">transform</span>: <span class="fn">translateY</span>(<span class="num">0</span>); }</span></div>
+        <div class="code-line"><span class="line-num">109</span><span class="line-code">}</span></div>
+        <div class="code-line"><span class="line-num">111</span><span class="line-code"><span class="cls">@keyframes</span> <span class="fn">pulse</span> {</span></div>
+        <div class="code-line"><span class="line-num">112</span><span class="line-code">  <span class="num">0%</span>, <span class="num">100%</span> { <span class="obj">opacity</span>: <span class="num">1</span>; <span class="obj">transform</span>: <span class="fn">scale</span>(<span class="num">1</span>); }</span></div>
+        <div class="code-line"><span class="line-num">113</span><span class="line-code">  <span class="num">50%</span>       { <span class="obj">opacity</span>: <span class="num">0.7</span>; <span class="obj">transform</span>: <span class="fn">scale</span>(<span class="num">0.9</span>); }</span></div>
+        <div class="code-line"><span class="line-num">114</span><span class="line-code">}</span></div>
+        <div class="code-line"><span class="line-num">115</span><span class="line-code"><span class="cls">.status-dot.active</span> { <span class="obj">animation</span>: <span class="fn">pulse</span> <span class="num">2s</span> <span class="str">infinite</span>; }</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 106–109</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">@keyframes fadeInUp { from {...} to {...} }</div>
+          <div class="explain-text"><strong>CSS @keyframes</strong> defines a named animation sequence. <code>from</code> = start state, <code>to</code> = end state.<br/><br/>
+          <code>opacity: 0 → 1</code> = invisible to fully visible<br/>
+          <code>translateY(12px) → translateY(0)</code> = moves UP 12px (starts 12px below, slides into position)<br/><br/>
+          Combined, this creates the "fade in from below" effect every time you switch views.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 111–115</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">@keyframes pulse { 0%, 100% { scale(1) } 50% { scale(0.9) } }</div>
+          <div class="explain-text">The <strong>pulsing green dot</strong> animation in the sidebar. At 0% and 100% (start/end), it's normal size. At 50% (halfway), it shrinks to 90% and dims to 70% opacity. <code>infinite</code> makes it loop forever. <code>2s</code> = each cycle takes 2 seconds.</div>
+          <div class="analogy">Like a heartbeat monitor — regular oscillation between two states.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     CHAPTER 3: data_generator.js
+========================================================= -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">Chapter 3 · data_generator.js</div>
+    <div class="chapter-title">The Data Factory 🏭</div>
+    <div class="chapter-file">static/js/data_generator.js</div>
+    <div class="chapter-desc">
+      This file creates realistic synthetic business event log data — 500 orders
+      each with 5–10 events — and also parses CSV files uploaded by the user.
+      It teaches you about objects, arrays, random distributions, and data modeling.
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 1 — The DataGenerator Object</div>
+
+    <div class="concept-box">
+      <h4>🧠 What is an Object in JavaScript?</h4>
+      <p>An object is a collection of related data and functions grouped together.
+      Instead of having 20 separate variables and functions flying around, we group them
+      in one object: <code>const DataGenerator = { ... }</code>. Functions inside objects
+      are called "methods". Access them with: <code>DataGenerator.generateEventLog()</code>.</p>
+    </div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>data_generator.js — Lines 1–45</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">1</span><span class="line-code"><span class="kw">const</span> DataGenerator <span class="op">=</span> {</span></div>
+        <div class="code-line"><span class="line-num">3</span><span class="line-code">  ACTIVITIES: [</span></div>
+        <div class="code-line"><span class="line-num">4</span><span class="line-code">    { <span class="obj">name</span>: <span class="str">'Order Received'</span>,   <span class="obj">dept</span>: <span class="str">'Sales'</span>,   <span class="obj">avgDuration</span>: <span class="num">0</span>,  <span class="obj">stdDev</span>: <span class="num">0</span>   },</span></div>
+        <div class="code-line"><span class="line-num">5</span><span class="line-code">    { <span class="obj">name</span>: <span class="str">'Credit Check'</span>,      <span class="obj">dept</span>: <span class="str">'Finance'</span>, <span class="obj">avgDuration</span>: <span class="num">8</span>,  <span class="obj">stdDev</span>: <span class="num">6</span>   },</span></div>
+        <div class="code-line"><span class="line-num">6</span><span class="line-code">    { <span class="obj">name</span>: <span class="str">'Order Approved'</span>,    <span class="obj">dept</span>: <span class="str">'Management'</span>, <span class="obj">avgDuration</span>: <span class="num">24</span>, <span class="obj">stdDev</span>: <span class="num">20</span> },</span></div>
+        <div class="code-line"><span class="line-num">7</span><span class="line-code">    { <span class="obj">name</span>: <span class="str">'Payment Received'</span>,  <span class="obj">dept</span>: <span class="str">'Finance'</span>, <span class="obj">avgDuration</span>: <span class="num">72</span>, <span class="obj">stdDev</span>: <span class="num">48</span> },</span></div>
+        <div class="code-line"><span class="line-num">8</span><span class="line-code">  ],</span></div>
+        <div class="code-line"><span class="line-num">10</span><span class="line-code">  VARIANTS: [</span></div>
+        <div class="code-line"><span class="line-num">11</span><span class="line-code">    { <span class="obj">weight</span>: <span class="num">0.60</span>, <span class="obj">path</span>: [<span class="num">0</span>,<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>,<span class="num">5</span>,<span class="num">6</span>,<span class="num">7</span>,<span class="num">8</span>] },</span></div>
+        <div class="code-line"><span class="line-num">12</span><span class="line-code">    { <span class="obj">weight</span>: <span class="num">0.15</span>, <span class="obj">path</span>: [<span class="num">0</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>,<span class="num">5</span>,<span class="num">6</span>,<span class="num">7</span>,<span class="num">8</span>] },</span></div>
+        <div class="code-line"><span class="line-num">13</span><span class="line-code">    { <span class="obj">weight</span>: <span class="num">0.10</span>, <span class="obj">path</span>: [<span class="num">0</span>,<span class="num">1</span>,<span class="num">3</span>,<span class="num">3</span>,<span class="num">4</span>,<span class="num">5</span>,<span class="num">6</span>,<span class="num">7</span>,<span class="num">8</span>] },</span></div>
+        <div class="code-line"><span class="line-num">14</span><span class="line-code">  ],</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 1</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">const DataGenerator = { ... }</div>
+          <div class="explain-text"><code>const</code> = constant — a variable that can't be reassigned. <code>DataGenerator</code> = the name (PascalCase convention for objects/classes). The <code>{ }</code> opens an object literal. Everything between <code>{</code> and <code>}</code> is a property (data) or method (function) of this object.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 3–8</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">ACTIVITIES: [ { name: '...', avgDuration: 8, stdDev: 6 } ]</div>
+          <div class="explain-text"><strong>Array of Objects</strong>. <code>ACTIVITIES</code> is an array (list) where each item is an object representing one business activity. ALL_CAPS is convention for constants that shouldn't change.<br/><br/>
+          <code>avgDuration: 8</code> = on average this step takes 8 hours<br/>
+          <code>stdDev: 6</code> = standard deviation (spread). If avg=8 and stdDev=6, most cases take 2–14 hours, with rare outliers much longer or shorter.</div>
+          <div class="analogy">stdDev is like how consistently a pizza shop delivers. Average 30min delivery with stdDev=5 is reliable (25–35min). Average 30min with stdDev=20 is unpredictable (10–50min).</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 10–14</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">VARIANTS: [ { weight: 0.60, path: [0,1,2,3,...] } ]</div>
+          <div class="explain-text"><strong>Process Variants</strong> — different routes through the process. <code>weight: 0.60</code> = 60% of orders follow this path. <code>path: [0,1,2,3,4,5,6,7,8]</code> = array of activity indices (0=Order Received, 1=Credit Check, etc.). The path <code>[0,3,3,4...]</code> has activity 3 twice — that's a <em>rework loop</em> (inventory check failed, try again)!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 2 — The generateEventLog Function</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>data_generator.js — generateEventLog()</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">50</span><span class="line-code">  <span class="fn">generateEventLog</span>(<span class="obj">numCases</span> <span class="op">=</span> <span class="num">500</span>, <span class="obj">startDate</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">Date</span>(<span class="str">'2024-01-01'</span>)) {</span></div>
+        <div class="code-line"><span class="line-num">51</span><span class="line-code">    <span class="kw">const</span> events <span class="op">=</span> [];</span></div>
+        <div class="code-line"><span class="line-num">53</span><span class="line-code">    <span class="kw">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="num">1</span>; i <span class="op">&lt;=</span> numCases; i<span class="op">++</span>) {</span></div>
+        <div class="code-line"><span class="line-num">54</span><span class="line-code">      <span class="kw">const</span> caseId <span class="op">=</span> <span class="str">`ORD-${</span><span class="cls">String</span>(i).<span class="fn">padStart</span>(<span class="num">4</span>, <span class="str">'0'</span>)<span class="str">}`</span>;</span></div>
+        <div class="code-line"><span class="line-num">55</span><span class="line-code">      <span class="kw">const</span> variant <span class="op">=</span> <span class="kw">this</span>.<span class="fn">_selectVariant</span>();</span></div>
+        <div class="code-line"><span class="line-num">57</span><span class="line-code">      <span class="kw">let</span> currentTime <span class="op">=</span> <span class="kw">new</span> <span class="cls">Date</span>(startDate.<span class="fn">getTime</span>() <span class="op">+</span></span></div>
+        <div class="code-line"><span class="line-num">58</span><span class="line-code">        Math.<span class="fn">random</span>() <span class="op">*</span> <span class="num">90</span> <span class="op">*</span> <span class="num">24</span> <span class="op">*</span> <span class="num">60</span> <span class="op">*</span> <span class="num">60</span> <span class="op">*</span> <span class="num">1000</span>);</span></div>
+        <div class="code-line"><span class="line-num">60</span><span class="line-code">      <span class="kw">for</span> (<span class="kw">let</span> stepIdx <span class="op">=</span> <span class="num">0</span>; stepIdx <span class="op">&lt;</span> variant.path.<span class="obj">length</span>; stepIdx<span class="op">++</span>) {</span></div>
+        <div class="code-line"><span class="line-num">61</span><span class="line-code">        <span class="kw">const</span> activityIdx <span class="op">=</span> variant.path[stepIdx];</span></div>
+        <div class="code-line"><span class="line-num">62</span><span class="line-code">        <span class="kw">const</span> activity <span class="op">=</span> <span class="kw">this</span>.ACTIVITIES[activityIdx];</span></div>
+        <div class="code-line"><span class="line-num">64</span><span class="line-code">        <span class="kw">const</span> waitHours <span class="op">=</span> Math.<span class="fn">max</span>(<span class="num">0</span>,</span></div>
+        <div class="code-line"><span class="line-num">65</span><span class="line-code">          activity.avgDuration <span class="op">+</span> <span class="kw">this</span>.<span class="fn">_normalRandom</span>() <span class="op">*</span> activity.stdDev);</span></div>
+        <div class="code-line"><span class="line-num">67</span><span class="line-code">        currentTime <span class="op">=</span> <span class="kw">new</span> <span class="cls">Date</span>(currentTime.<span class="fn">getTime</span>() <span class="op">+</span> waitHours <span class="op">*</span> <span class="num">60</span> <span class="op">*</span> <span class="num">60</span> <span class="op">*</span> <span class="num">1000</span>);</span></div>
+        <div class="code-line"><span class="line-num">69</span><span class="line-code">        events.<span class="fn">push</span>({</span></div>
+        <div class="code-line"><span class="line-num">70</span><span class="line-code">          <span class="obj">case_id</span>:   caseId,</span></div>
+        <div class="code-line"><span class="line-num">71</span><span class="line-code">          <span class="obj">activity</span>:  activity.name,</span></div>
+        <div class="code-line"><span class="line-num">72</span><span class="line-code">          <span class="obj">timestamp</span>: <span class="kw">new</span> <span class="cls">Date</span>(currentTime),</span></div>
+        <div class="code-line"><span class="line-num">73</span><span class="line-code">          <span class="obj">resource</span>:  resource,</span></div>
+        <div class="code-line"><span class="line-num">74</span><span class="line-code">        });</span></div>
+        <div class="code-line"><span class="line-num">75</span><span class="line-code">      }</span></div>
+        <div class="code-line"><span class="line-num">77</span><span class="line-code">    events.<span class="fn">sort</span>((a, b) <span class="op">=&gt;</span> a.timestamp <span class="op">-</span> b.timestamp);</span></div>
+        <div class="code-line"><span class="line-num">78</span><span class="line-code">    <span class="kw">return</span> events;</span></div>
+        <div class="code-line"><span class="line-num">79</span><span class="line-code">  },</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 50</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">generateEventLog(numCases = 500, startDate = new Date('2024-01-01'))</div>
+          <div class="explain-text"><strong>Function with Default Parameters</strong>. If you call <code>generateEventLog()</code> with no arguments, numCases automatically equals 500 and startDate equals January 1st 2024. Default parameters prevent errors when arguments aren't provided.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 51</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">const events = [];</div>
+          <div class="explain-text">Creates an <strong>empty array</strong>. This is our "bucket" — we'll push (add) event objects into it one by one. At the end, it will contain thousands of events.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 53–54</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">for (let i = 1; i &lt;= numCases; i++) { const caseId = `ORD-${String(i).padStart(4,'0')}`; }</div>
+          <div class="explain-text"><strong>For loop</strong>: runs 500 times (i goes 1→500).<br/>
+          <code>String(i).padStart(4, '0')</code> = converts number to string, pads with zeros until 4 chars: 1→"0001", 42→"0042", 500→"0500".<br/>
+          Template literal <code>`ORD-${...}`</code> = string with embedded expression. Result: "ORD-0001".</div>
+          <div class="analogy">padStart is like how hotels number rooms: Room 001, 002... not Room 1, 2... to keep them sortable alphabetically.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 57–58</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">Math.random() * 90 * 24 * 60 * 60 * 1000</div>
+          <div class="explain-text"><code>Math.random()</code> = random decimal between 0 and 1.<br/>
+          <code>× 90 × 24 × 60 × 60 × 1000</code> = multiply by milliseconds in 90 days (90 days × 24 hours × 60 min × 60 sec × 1000 ms).<br/>
+          Result: a random millisecond offset between 0 and 90 days. Each order starts at a random time within a 90-day window.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 64–65</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">Math.max(0, activity.avgDuration + this._normalRandom() * activity.stdDev)</div>
+          <div class="explain-text">
+          <code>this._normalRandom()</code> = returns a random number from a bell curve (mostly near 0, rarely far from 0).<br/>
+          <code>× activity.stdDev</code> = scale the randomness by the standard deviation.<br/>
+          <code>+ activity.avgDuration</code> = shift to center around the average.<br/>
+          <code>Math.max(0, ...)</code> = wait times can't be negative! This clamps to minimum 0.<br/><br/>
+          Example: avgDuration=8, stdDev=6 → wait times are mostly 2–14 hours, rarely up to 20+.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 67</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">currentTime = new Date(currentTime.getTime() + waitHours * 60 * 60 * 1000)</div>
+          <div class="explain-text"><strong>Date arithmetic</strong>. <code>getTime()</code> converts a Date to milliseconds since Jan 1, 1970 (Unix timestamp). Add the wait hours converted to milliseconds. Wrap in <code>new Date()</code> to convert back. This advances the clock by the wait time.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 69–74</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">events.push({ case_id, activity, timestamp, resource })</div>
+          <div class="explain-text"><code>events.push()</code> adds an item to the end of the array. We push an <strong>object literal</strong> — a new event row. This is one row in our event log table. After all loops complete, events[] contains thousands of these row objects.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 77</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">events.sort((a, b) => a.timestamp - b.timestamp)</div>
+          <div class="explain-text"><strong>Array.sort() with a comparator</strong>. Without a comparator, sort() converts to strings (wrong for dates!). With <code>(a, b) => a.timestamp - b.timestamp</code>: negative result = a comes first, positive = b comes first, zero = equal. This sorts chronologically (oldest event first).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 3 — The Box-Muller Transform (Statistics Algorithm)</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>data_generator.js — _normalRandom()</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">90</span><span class="line-code">  <span class="fn">_normalRandom</span>() {</span></div>
+        <div class="code-line"><span class="line-num">91</span><span class="line-code">    <span class="kw">let</span> u <span class="op">=</span> <span class="num">0</span>, v <span class="op">=</span> <span class="num">0</span>;</span></div>
+        <div class="code-line"><span class="line-num">92</span><span class="line-code">    <span class="kw">while</span> (u <span class="op">===</span> <span class="num">0</span>) u <span class="op">=</span> Math.<span class="fn">random</span>();</span></div>
+        <div class="code-line"><span class="line-num">93</span><span class="line-code">    <span class="kw">while</span> (v <span class="op">===</span> <span class="num">0</span>) v <span class="op">=</span> Math.<span class="fn">random</span>();</span></div>
+        <div class="code-line"><span class="line-num">94</span><span class="line-code">    <span class="kw">return</span> Math.<span class="fn">sqrt</span>(<span class="op">-2.0</span> <span class="op">*</span> Math.<span class="fn">log</span>(u)) <span class="op">*</span> Math.<span class="fn">cos</span>(<span class="num">2.0</span> <span class="op">*</span> Math.PI <span class="op">*</span> v);</span></div>
+        <div class="code-line"><span class="line-num">95</span><span class="line-code">  },</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 91–95</span></div>
+        <div class="explain-content">
+          <div class="explain-text"><strong>Box-Muller Transform</strong> — a mathematical algorithm to generate normally distributed (bell curve) random numbers from uniform random numbers.<br/><br/>
+          <code>Math.random()</code> gives uniform randomness (equal chance of any value). But real-world durations follow a bell curve — most close to average, few extremes.<br/><br/>
+          Lines 92–93: Loop until we get non-zero values (avoids log(0) = -Infinity error).<br/>
+          Line 94: The formula transforms two uniform randoms (u, v) into one normally distributed random. The math uses natural log and cosine — trust the formula, it's proven statistics.</div>
+          <div class="tip-box">You don't need to understand the math. The important thing: this gives us realistic bell-curve distributed numbers, making our fake data look like real business data.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     CHAPTER 4: process_engine.js
+========================================================= -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">Chapter 4 · process_engine.js</div>
+    <div class="chapter-title">The Brain 🧠</div>
+    <div class="chapter-file">static/js/process_engine.js</div>
+    <div class="chapter-desc">
+      This is the most important file. It contains all the analytics algorithms —
+      the same mathematics that Celonis uses. It groups data by case, computes
+      statistics, builds a process graph, detects bottlenecks, and discovers variants.
+    </div>
+  </div>
+
+  <div class="concept-box">
+    <h4>🧠 JavaScript vs SQL — They Do the Same Thing!</h4>
+    <p>All the analytics here can be done in SQL. We're doing it in JavaScript
+    because there's no database — but the logic is identical. Throughout this chapter,
+    we'll show both versions side by side.</p>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 1 — The load() Entry Point</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>process_engine.js — load()</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">40</span><span class="line-code">  <span class="fn">load</span>(events) {</span></div>
+        <div class="code-line"><span class="line-num">41</span><span class="line-code">    console.<span class="fn">group</span>(<span class="str">'[ProcessEngine] Computing analytics...'</span>);</span></div>
+        <div class="code-line"><span class="line-num">42</span><span class="line-code">    console.<span class="fn">time</span>(<span class="str">'Total analysis time'</span>);</span></div>
+        <div class="code-line"><span class="line-num">44</span><span class="line-code">    <span class="kw">const</span> cases <span class="op">=</span> <span class="kw">this</span>.<span class="fn">_groupByCase</span>(events);</span></div>
+        <div class="code-line"><span class="line-num">45</span><span class="line-code">    <span class="kw">const</span> activityStats <span class="op">=</span> <span class="kw">this</span>.<span class="fn">_computeActivityStats</span>(cases);</span></div>
+        <div class="code-line"><span class="line-num">46</span><span class="line-code">    <span class="kw">const</span> graph <span class="op">=</span> <span class="kw">this</span>.<span class="fn">_buildProcessGraph</span>(cases);</span></div>
+        <div class="code-line"><span class="line-num">47</span><span class="line-code">    <span class="kw">const</span> bottlenecks <span class="op">=</span> <span class="kw">this</span>.<span class="fn">_detectBottlenecks</span>(graph, activityStats);</span></div>
+        <div class="code-line"><span class="line-num">48</span><span class="line-code">    <span class="kw">const</span> variants <span class="op">=</span> <span class="kw">this</span>.<span class="fn">_discoverVariants</span>(cases);</span></div>
+        <div class="code-line"><span class="line-num">49</span><span class="line-code">    <span class="kw">const</span> resourceStats <span class="op">=</span> <span class="kw">this</span>.<span class="fn">_computeResourceStats</span>(events);</span></div>
+        <div class="code-line"><span class="line-num">51</span><span class="line-code">    <span class="kw">this</span>.stats <span class="op">=</span> { totalCases: cases.size, cases, activityStats, graph, bottlenecks, variants };</span></div>
+        <div class="code-line"><span class="line-num">52</span><span class="line-code">    <span class="kw">return</span> <span class="kw">this</span>.stats;</span></div>
+        <div class="code-line"><span class="line-num">53</span><span class="line-code">  },</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 41–42</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">console.group() / console.time()</div>
+          <div class="explain-text"><strong>Debugging tools</strong>. Open browser DevTools (F12) → Console tab to see these.<br/>
+          <code>console.group()</code> creates a collapsible group in the console — useful for organizing lots of log messages.<br/>
+          <code>console.time('label')</code> starts a timer. <code>console.timeEnd('label')</code> stops it and prints how long it took. Great for measuring performance.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 44–49</span></div>
+        <div class="explain-content">
+          <div class="explain-text"><strong>Pipeline pattern</strong>: each step feeds into the next.<br/>
+          Step 1: Group raw events into cases<br/>
+          Step 2: Compute stats for each activity<br/>
+          Step 3: Build the process graph<br/>
+          Step 4: Find bottlenecks using the graph + stats<br/>
+          Step 5: Discover unique process paths<br/>
+          Step 6: Analyze resource workload<br/><br/>
+          This is called a <em>data pipeline</em> — a series of transformations that turn raw data into insights.</div>
+          <div class="analogy">Like a car assembly line: raw metal → shaped parts → painted parts → assembled car → tested car. Each station (function) adds value to what the previous station produced.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 51</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">this.stats = { totalCases: cases.size, cases, activityStats, ... }</div>
+          <div class="explain-text"><code>this.stats</code> = store results on the object itself so other methods can access them later. <br/>
+          <strong>Shorthand property syntax</strong>: <code>{ cases }</code> is the same as <code>{ cases: cases }</code> — when the variable name matches the property name, you can write it once.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 2 — _groupByCase() : The Foundation</div>
+
+    <div class="sql-compare">
+      <div class="sql-box">
+        <div class="sql-box-header">SQL Version</div>
+        <div class="sql-box-body">SELECT case_id,
+  MIN(timestamp) AS start,
+  MAX(timestamp) AS end,
+  DATEDIFF(MAX(ts), MIN(ts)) AS duration
+FROM events
+GROUP BY case_id
+ORDER BY timestamp</div>
+      </div>
+      <div class="js-box">
+        <div class="js-box-header">JavaScript Version</div>
+        <div class="js-box-body">const cases = new Map();
+for (const event of events) {
+  if (!cases.has(event.case_id)) {
+    cases.set(event.case_id, {events:[]});
+  }
+  cases.get(event.case_id)
+       .events.push(event);
+}</div>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>process_engine.js — _groupByCase()</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">80</span><span class="line-code">  <span class="fn">_groupByCase</span>(events) {</span></div>
+        <div class="code-line"><span class="line-num">81</span><span class="line-code">    <span class="kw">const</span> cases <span class="op">=</span> <span class="kw">new</span> <span class="cls">Map</span>();</span></div>
+        <div class="code-line"><span class="line-num">83</span><span class="line-code">    <span class="kw">for</span> (<span class="kw">const</span> event <span class="kw">of</span> events) {</span></div>
+        <div class="code-line"><span class="line-num">84</span><span class="line-code">      <span class="kw">if</span> (!cases.<span class="fn">has</span>(event.case_id)) {</span></div>
+        <div class="code-line"><span class="line-num">85</span><span class="line-code">        cases.<span class="fn">set</span>(event.case_id, {</span></div>
+        <div class="code-line"><span class="line-num">86</span><span class="line-code">          <span class="obj">id</span>: event.case_id, <span class="obj">events</span>: [], <span class="obj">start</span>: <span class="kw">null</span>, <span class="obj">end</span>: <span class="kw">null</span>,</span></div>
+        <div class="code-line"><span class="line-num">87</span><span class="line-code">        });</span></div>
+        <div class="code-line"><span class="line-num">88</span><span class="line-code">      }</span></div>
+        <div class="code-line"><span class="line-num">89</span><span class="line-code">      cases.<span class="fn">get</span>(event.case_id).events.<span class="fn">push</span>(event);</span></div>
+        <div class="code-line"><span class="line-num">90</span><span class="line-code">    }</span></div>
+        <div class="code-line"><span class="line-num">92</span><span class="line-code">    <span class="kw">for</span> (<span class="kw">const</span> [caseId, caseData] <span class="kw">of</span> cases) {</span></div>
+        <div class="code-line"><span class="line-num">93</span><span class="line-code">      caseData.events.<span class="fn">sort</span>((a, b) <span class="op">=&gt;</span> a.timestamp <span class="op">-</span> b.timestamp);</span></div>
+        <div class="code-line"><span class="line-num">94</span><span class="line-code">      caseData.start <span class="op">=</span> caseData.events[<span class="num">0</span>].timestamp;</span></div>
+        <div class="code-line"><span class="line-num">95</span><span class="line-code">      caseData.end   <span class="op">=</span> caseData.events[caseData.events.<span class="obj">length</span> <span class="op">-</span> <span class="num">1</span>].timestamp;</span></div>
+        <div class="code-line"><span class="line-num">96</span><span class="line-code">      caseData.duration <span class="op">=</span> (caseData.end <span class="op">-</span> caseData.start) <span class="op">/</span> (<span class="num">1000</span> <span class="op">*</span> <span class="num">60</span> <span class="op">*</span> <span class="num">60</span>);</span></div>
+        <div class="code-line"><span class="line-num">97</span><span class="line-code">    }</span></div>
+        <div class="code-line"><span class="line-num">98</span><span class="line-code">    <span class="kw">return</span> cases;</span></div>
+        <div class="code-line"><span class="line-num">99</span><span class="line-code">  },</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 81</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">const cases = new Map();</div>
+          <div class="explain-text"><strong>Map</strong> is like a dictionary or lookup table. Key → Value pairs. Unlike regular objects, Map keys can be any type (not just strings), and Map preserves insertion order. <code>new Map()</code> creates an empty map.<br/><br/>
+          Here: key = case_id (e.g., "ORD-001"), value = object with all events for that case.</div>
+          <div class="analogy">Like filing cabinet drawers labeled by case ID. You open drawer "ORD-001" to find all documents (events) for that order.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 83–89</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">for (const event of events) { if (!cases.has(...)) cases.set(...) }</div>
+          <div class="explain-text"><strong>for...of loop</strong> iterates over each item in an array (unlike for loop which uses index numbers).<br/><br/>
+          <code>cases.has(event.case_id)</code> = does this case ID already exist in our map?<br/>
+          If NOT → create it with <code>cases.set(key, value)</code><br/>
+          If YES → just add the event to existing case's events array.<br/><br/>
+          This is the JS equivalent of SQL's GROUP BY.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 92</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">for (const [caseId, caseData] of cases) { }</div>
+          <div class="explain-text"><strong>Destructuring in for...of Map</strong>. When iterating a Map, each item is a [key, value] pair. <code>const [caseId, caseData]</code> extracts them into two variables simultaneously. This is <em>array destructuring</em>.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 95</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">caseData.events[caseData.events.length - 1].timestamp</div>
+          <div class="explain-text">Gets the <strong>last element</strong> of an array. Arrays are 0-indexed (first = [0]). Last = [length - 1]. For an array of 9 events, last index = 8 = [9-1]. This gives us the final event's timestamp = when the case ended.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 96</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">caseData.duration = (end - start) / (1000 * 60 * 60)</div>
+          <div class="explain-text">Date subtraction gives milliseconds. Divide by 1000 → seconds. Divide by 60 → minutes. Divide by 60 → hours. So this converts the duration from milliseconds to hours.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 3 — _detectBottlenecks() : The Core Algorithm</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>process_engine.js — _detectBottlenecks()</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">160</span><span class="line-code">  <span class="fn">_detectBottlenecks</span>(graph, activityStats) {</span></div>
+        <div class="code-line"><span class="line-num">161</span><span class="line-code">    <span class="kw">const</span> bottlenecks <span class="op">=</span> [];</span></div>
+        <div class="code-line"><span class="line-num">163</span><span class="line-code">    <span class="kw">let</span> maxWait <span class="op">=</span> <span class="num">0</span>, maxFreq <span class="op">=</span> <span class="num">0</span>;</span></div>
+        <div class="code-line"><span class="line-num">164</span><span class="line-code">    <span class="kw">for</span> (<span class="kw">const</span> [, stat] <span class="kw">of</span> activityStats) {</span></div>
+        <div class="code-line"><span class="line-num">165</span><span class="line-code">      maxWait <span class="op">=</span> Math.<span class="fn">max</span>(maxWait, stat.avgWait);</span></div>
+        <div class="code-line"><span class="line-num">166</span><span class="line-code">      maxFreq <span class="op">=</span> Math.<span class="fn">max</span>(maxFreq, stat.frequency);</span></div>
+        <div class="code-line"><span class="line-num">167</span><span class="line-code">    }</span></div>
+        <div class="code-line"><span class="line-num">169</span><span class="line-code">    <span class="kw">for</span> (<span class="kw">const</span> [activity, stat] <span class="kw">of</span> activityStats) {</span></div>
+        <div class="code-line"><span class="line-num">170</span><span class="line-code">      <span class="kw">const</span> normalizedWait <span class="op">=</span> stat.avgWait <span class="op">/</span> maxWait;</span></div>
+        <div class="code-line"><span class="line-num">171</span><span class="line-code">      <span class="kw">const</span> normalizedFreq <span class="op">=</span> stat.frequency <span class="op">/</span> maxFreq;</span></div>
+        <div class="code-line"><span class="line-num">172</span><span class="line-code">      <span class="kw">const</span> score <span class="op">=</span> normalizedWait <span class="op">*</span> <span class="num">0.7</span> <span class="op">+</span> normalizedFreq <span class="op">*</span> <span class="num">0.3</span>;</span></div>
+        <div class="code-line"><span class="line-num">174</span><span class="line-code">      bottlenecks.<span class="fn">push</span>({ activity, score, severity: score <span class="op">&gt;</span> <span class="num">0.7</span> ? <span class="str">'critical'</span> : <span class="str">'high'</span> });</span></div>
+        <div class="code-line"><span class="line-num">175</span><span class="line-code">    }</span></div>
+        <div class="code-line"><span class="line-num">177</span><span class="line-code">    bottlenecks.<span class="fn">sort</span>((a, b) <span class="op">=&gt;</span> b.score <span class="op">-</span> a.score);</span></div>
+        <div class="code-line"><span class="line-num">178</span><span class="line-code">    <span class="kw">return</span> bottlenecks;</span></div>
+        <div class="code-line"><span class="line-num">179</span><span class="line-code">  },</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 163–167</span></div>
+        <div class="explain-content">
+          <div class="explain-text"><strong>Finding maximums</strong>. Before scoring, we need to know the maximum wait time and maximum frequency across all activities. This is used for normalization.<br/><br/>
+          <code>Math.max(maxWait, stat.avgWait)</code> = keeps updating maxWait if a larger value is found. Like keeping track of the highest score in a game.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 170–172</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">score = normalizedWait * 0.7 + normalizedFreq * 0.3</div>
+          <div class="explain-text"><strong>Normalization + Weighted Scoring</strong>.<br/><br/>
+          <code>normalizedWait = avgWait / maxWait</code> → converts to 0–1 scale (1 = worst bottleneck)<br/>
+          <code>normalizedFreq = frequency / maxFreq</code> → same for frequency<br/><br/>
+          Without normalization, we can't compare "72 hours wait" vs "450 occurrences" — they're different units! Normalizing puts both on the same 0–1 scale.<br/><br/>
+          Weight 0.7 = wait time matters 70% (more important). Weight 0.3 = frequency matters 30%. Weights must add up to 1.0.</div>
+          <div class="analogy">Like grading: 70% midterm + 30% assignments = final grade. Both contribute but midterm matters more.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 174</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">score > 0.7 ? 'critical' : 'high'</div>
+          <div class="explain-text"><strong>Ternary operator</strong> — shorthand for if/else. Format: <code>condition ? value_if_true : value_if_false</code>. If score > 0.7 → "critical", otherwise → "high". Used for the red badge label on bottleneck cards.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     CHAPTER 5: process_map.js
+========================================================= -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">Chapter 5 · process_map.js</div>
+    <div class="chapter-title">The Artist 🎨</div>
+    <div class="chapter-file">static/js/process_map.js</div>
+    <div class="chapter-desc">
+      This file uses D3.js to draw the interactive process flow diagram — the most
+      visually complex part. It takes the graph data from ProcessEngine and renders
+      it as an interactive SVG with zoom, pan, hover tooltips, and color-coded
+      bottleneck visualization.
+    </div>
+  </div>
+
+  <div class="concept-box">
+    <h4>🧠 What is SVG?</h4>
+    <p>SVG = Scalable Vector Graphics. Unlike PNG/JPEG (pixel images), SVG uses math to describe shapes.
+    A circle in SVG: <code>&lt;circle cx="50" cy="50" r="20"&gt;</code>. Zooming in never pixelates.
+    D3.js generates SVG elements programmatically from data — "data-driven documents" (that's what D3 stands for!).</p>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 1 — The render() Function and Setup</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>process_map.js — render() setup</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">40</span><span class="line-code">  <span class="fn">render</span>(graphData, activityStats, options <span class="op">=</span> {}) {</span></div>
+        <div class="code-line"><span class="line-num">42</span><span class="line-code">    <span class="kw">const</span> container <span class="op">=</span> document.<span class="fn">getElementById</span>(<span class="str">'processMapSVG'</span>);</span></div>
+        <div class="code-line"><span class="line-num">43</span><span class="line-code">    <span class="kw">const</span> width  <span class="op">=</span> container.clientWidth  <span class="op">||</span> <span class="num">900</span>;</span></div>
+        <div class="code-line"><span class="line-num">44</span><span class="line-code">    <span class="kw">const</span> height <span class="op">=</span> container.clientHeight <span class="op">||</span> <span class="num">500</span>;</span></div>
+        <div class="code-line"><span class="line-num">46</span><span class="line-code">    d3.<span class="fn">select</span>(<span class="str">'#processMapSVG'</span>).<span class="fn">selectAll</span>(<span class="str">'*'</span>).<span class="fn">remove</span>();</span></div>
+        <div class="code-line"><span class="line-num">48</span><span class="line-code">    <span class="kw">this</span>.svg <span class="op">=</span> d3.<span class="fn">select</span>(<span class="str">'#processMapSVG'</span>);</span></div>
+        <div class="code-line"><span class="line-num">50</span><span class="line-code">    <span class="kw">const</span> defs <span class="op">=</span> <span class="kw">this</span>.svg.<span class="fn">append</span>(<span class="str">'defs'</span>);</span></div>
+        <div class="code-line"><span class="line-num">51</span><span class="line-code">    defs.<span class="fn">append</span>(<span class="str">'marker'</span>)</span></div>
+        <div class="code-line"><span class="line-num">52</span><span class="line-code">      .<span class="fn">attr</span>(<span class="str">'id'</span>, <span class="str">'arrowhead'</span>)</span></div>
+        <div class="code-line"><span class="line-num">53</span><span class="line-code">      .<span class="fn">attr</span>(<span class="str">'viewBox'</span>, <span class="str">'0 -4 8 8'</span>)</span></div>
+        <div class="code-line"><span class="line-num">54</span><span class="line-code">      .<span class="fn">attr</span>(<span class="str">'refX'</span>, <span class="num">8</span>).<span class="fn">attr</span>(<span class="str">'refY'</span>, <span class="num">0</span>)</span></div>
+        <div class="code-line"><span class="line-num">55</span><span class="line-code">      .<span class="fn">attr</span>(<span class="str">'markerWidth'</span>, <span class="num">6</span>).<span class="fn">attr</span>(<span class="str">'markerHeight'</span>, <span class="num">6</span>)</span></div>
+        <div class="code-line"><span class="line-num">56</span><span class="line-code">      .<span class="fn">attr</span>(<span class="str">'orient'</span>, <span class="str">'auto'</span>)</span></div>
+        <div class="code-line"><span class="line-num">57</span><span class="line-code">      .<span class="fn">append</span>(<span class="str">'path'</span>).<span class="fn">attr</span>(<span class="str">'d'</span>, <span class="str">'M0,-4L8,0L0,4'</span>).<span class="fn">attr</span>(<span class="str">'fill'</span>, <span class="str">'#4f8ef7'</span>);</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 43–44</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">container.clientWidth || 900</div>
+          <div class="explain-text"><code>clientWidth</code> = the actual pixel width of the SVG element on screen. The <code>|| 900</code> is a <strong>fallback</strong> — if clientWidth is 0 (element not visible yet), use 900 pixels as default. <code>||</code> means "OR" — use the right side if the left is falsy (0, null, undefined, false).</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 46</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">d3.select('#processMapSVG').selectAll('*').remove()</div>
+          <div class="explain-text"><strong>D3.js chain</strong>. D3 uses method chaining — each method returns the selection, so you can chain more methods.<br/>
+          <code>d3.select('#processMapSVG')</code> = select the SVG element<br/>
+          <code>.selectAll('*')</code> = select ALL children elements<br/>
+          <code>.remove()</code> = delete them all<br/><br/>
+          This <strong>clears the previous map</strong> before drawing a new one. Without this, old edges/nodes would stack up.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 50–57</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">defs.append('marker') ... 'M0,-4L8,0L0,4'</div>
+          <div class="explain-text"><strong>SVG &lt;defs&gt;</strong> = define reusable elements. <strong>&lt;marker&gt;</strong> creates an arrowhead that can be applied to any line.<br/><br/>
+          <code>orient="auto"</code> = automatically rotates the arrow to match the line direction.<br/>
+          <code>'M0,-4L8,0L0,4'</code> = SVG path data for a triangle:
+          M=moveto, L=lineto. "Move to (0,-4), draw line to (8,0), draw line to (0,4)" — this traces a triangle pointing right.</div>
+          <div class="analogy">Like defining a rubber stamp shape once and then stamping it at the end of every arrow line.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 2 — Zoom and Pan</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>process_map.js — Zoom Setup</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">65</span><span class="line-code">    <span class="kw">this</span>.g <span class="op">=</span> <span class="kw">this</span>.svg.<span class="fn">append</span>(<span class="str">'g'</span>).<span class="fn">attr</span>(<span class="str">'class'</span>, <span class="str">'pm-main-group'</span>);</span></div>
+        <div class="code-line"><span class="line-num">67</span><span class="line-code">    <span class="kw">this</span>.zoom <span class="op">=</span> d3.<span class="fn">zoom</span>()</span></div>
+        <div class="code-line"><span class="line-num">68</span><span class="line-code">      .<span class="fn">scaleExtent</span>([<span class="num">0.2</span>, <span class="num">3</span>])</span></div>
+        <div class="code-line"><span class="line-num">69</span><span class="line-code">      .<span class="fn">on</span>(<span class="str">'zoom'</span>, (event) <span class="op">=&gt;</span> {</span></div>
+        <div class="code-line"><span class="line-num">70</span><span class="line-code">        <span class="kw">this</span>.g.<span class="fn">attr</span>(<span class="str">'transform'</span>, event.transform);</span></div>
+        <div class="code-line"><span class="line-num">71</span><span class="line-code">      });</span></div>
+        <div class="code-line"><span class="line-num">73</span><span class="line-code">    <span class="kw">this</span>.svg.<span class="fn">call</span>(<span class="kw">this</span>.zoom);</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 65</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">this.svg.append('g').attr('class', 'pm-main-group')</div>
+          <div class="explain-text"><strong>&lt;g&gt;</strong> = SVG group element (like a &lt;div&gt; for SVG). We put ALL our process map content (nodes, edges) inside this group. When we apply zoom/pan transforms to the group, EVERYTHING inside moves together.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 67–71</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">d3.zoom().scaleExtent([0.2, 3]).on('zoom', ...)</div>
+          <div class="explain-text"><strong>D3 zoom behavior</strong>.<br/>
+          <code>scaleExtent([0.2, 3])</code> = min zoom 0.2x (very zoomed out), max 3x (very zoomed in).<br/>
+          <code>.on('zoom', callback)</code> = whenever zoom/pan happens, run this function.<br/>
+          <code>event.transform</code> = a matrix describing current position and scale. Applying it to the &lt;g&gt; group moves/scales everything inside.<br/>
+          <code>this.svg.call(this.zoom)</code> = attach zoom behavior to the SVG element (enables mouse wheel + drag).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 3 — Topological Layout Algorithm</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>process_map.js — _computeLayout() key parts</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">110</span><span class="line-code">    <span class="kw">const</span> inDegree <span class="op">=</span> <span class="kw">new</span> <span class="cls">Map</span>();</span></div>
+        <div class="code-line"><span class="line-num">111</span><span class="line-code">    <span class="kw">for</span> (<span class="kw">const</span> [name] <span class="kw">of</span> nodes) inDegree.<span class="fn">set</span>(name, <span class="num">0</span>);</span></div>
+        <div class="code-line"><span class="line-num">112</span><span class="line-code">    <span class="kw">for</span> (<span class="kw">const</span> edge <span class="kw">of</span> edges) {</span></div>
+        <div class="code-line"><span class="line-num">113</span><span class="line-code">      inDegree.<span class="fn">set</span>(edge.target, (inDegree.<span class="fn">get</span>(edge.target) <span class="op">||</span> <span class="num">0</span>) <span class="op">+</span> <span class="num">1</span>);</span></div>
+        <div class="code-line"><span class="line-num">114</span><span class="line-code">    }</span></div>
+        <div class="code-line"><span class="line-num">116</span><span class="line-code">    <span class="kw">const</span> queue <span class="op">=</span> [];</span></div>
+        <div class="code-line"><span class="line-num">117</span><span class="line-code">    <span class="kw">for</span> (<span class="kw">const</span> [name, deg] <span class="kw">of</span> inDegree) {</span></div>
+        <div class="code-line"><span class="line-num">118</span><span class="line-code">      <span class="kw">if</span> (deg <span class="op">===</span> <span class="num">0</span>) { queue.<span class="fn">push</span>(name); nodeLayer.<span class="fn">set</span>(name, <span class="num">0</span>); }</span></div>
+        <div class="code-line"><span class="line-num">119</span><span class="line-code">    }</span></div>
+        <div class="code-line"><span class="line-num">121</span><span class="line-code">    <span class="kw">while</span> (queue.<span class="obj">length</span> <span class="op">&gt;</span> <span class="num">0</span>) {</span></div>
+        <div class="code-line"><span class="line-num">122</span><span class="line-code">      <span class="kw">const</span> current <span class="op">=</span> queue.<span class="fn">shift</span>();</span></div>
+        <div class="code-line"><span class="line-num">123</span><span class="line-code">      <span class="kw">const</span> successors <span class="op">=</span> adjList.<span class="fn">get</span>(current) <span class="op">||</span> [];</span></div>
+        <div class="code-line"><span class="line-num">124</span><span class="line-code">      <span class="kw">for</span> (<span class="kw">const</span> next <span class="kw">of</span> successors) {</span></div>
+        <div class="code-line"><span class="line-num">125</span><span class="line-code">        <span class="kw">const</span> nextLayer <span class="op">=</span> Math.<span class="fn">max</span>(nodeLayer.<span class="fn">get</span>(next) <span class="op">||</span> <span class="num">0</span>, currentLayer <span class="op">+</span> <span class="num">1</span>);</span></div>
+        <div class="code-line"><span class="line-num">126</span><span class="line-code">        nodeLayer.<span class="fn">set</span>(next, nextLayer);</span></div>
+        <div class="code-line"><span class="line-num">127</span><span class="line-code">        queue.<span class="fn">push</span>(next);</span></div>
+        <div class="code-line"><span class="line-num">128</span><span class="line-code">      }</span></div>
+        <div class="code-line"><span class="line-num">129</span><span class="line-code">    }</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 110–114</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">inDegree: how many arrows point INTO each node</div>
+          <div class="explain-text"><strong>In-degree</strong> = number of incoming edges to a node. "Order Received" has 0 incoming edges (nothing comes before it — it's the start). "Credit Check" has 1 incoming edge (from "Order Received").<br/><br/>
+          We first initialize all to 0, then for each edge, increment the target node's count. This is like counting "how many prerequisite activities must happen before this one?"</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 117–119</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">if (deg === 0) → put in layer 0 (start of queue)</div>
+          <div class="explain-text"><strong>Finding start nodes</strong>: nodes with in-degree 0 have no predecessors — they're process starts. These go in Layer 0 (leftmost column). "Order Received" → Layer 0.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 121–129</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">BFS — Breadth-First Search</div>
+          <div class="explain-text"><strong>Breadth-First Search (BFS)</strong> — a graph traversal algorithm that processes nodes level by level.<br/><br/>
+          <code>queue.shift()</code> = removes and returns the FIRST item (FIFO: First In, First Out — like a real queue/line at a shop).<br/>
+          For each node we process, we find its successors and assign them to the next layer (current + 1).<br/>
+          <code>Math.max(...)</code> handles cases where a node has multiple paths leading to it — it goes to the DEEPEST layer required.</div>
+          <div class="analogy">Imagine water flowing through a network of pipes. BFS is like water spreading out layer by layer — all nodes at depth 1 fill before depth 2, etc.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 4 — Drawing Curved Edges</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>process_map.js — _renderEdges() curves</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">180</span><span class="line-code">    <span class="kw">const</span> x1 <span class="op">=</span> src.x <span class="op">+</span> src.w;</span></div>
+        <div class="code-line"><span class="line-num">181</span><span class="line-code">    <span class="kw">const</span> y1 <span class="op">=</span> src.y <span class="op">+</span> src.h <span class="op">/</span> <span class="num">2</span>;</span></div>
+        <div class="code-line"><span class="line-num">182</span><span class="line-code">    <span class="kw">const</span> x2 <span class="op">=</span> tgt.x;</span></div>
+        <div class="code-line"><span class="line-num">183</span><span class="line-code">    <span class="kw">const</span> y2 <span class="op">=</span> tgt.y <span class="op">+</span> tgt.h <span class="op">/</span> <span class="num">2</span>;</span></div>
+        <div class="code-line"><span class="line-num">185</span><span class="line-code">    <span class="kw">const</span> cx1 <span class="op">=</span> x1 <span class="op">+</span> (x2 <span class="op">-</span> x1) <span class="op">/</span> <span class="num">3</span>;</span></div>
+        <div class="code-line"><span class="line-num">186</span><span class="line-code">    <span class="kw">const</span> cy1 <span class="op">=</span> y1;</span></div>
+        <div class="code-line"><span class="line-num">187</span><span class="line-code">    <span class="kw">const</span> cx2 <span class="op">=</span> x1 <span class="op">+</span> (x2 <span class="op">-</span> x1) <span class="op">*</span> <span class="num">2</span> <span class="op">/</span> <span class="num">3</span>;</span></div>
+        <div class="code-line"><span class="line-num">188</span><span class="line-code">    <span class="kw">const</span> cy2 <span class="op">=</span> y2;</span></div>
+        <div class="code-line"><span class="line-num">190</span><span class="line-code">    <span class="kw">const</span> pathD <span class="op">=</span> <span class="str">`M ${x1} ${y1} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${x2} ${y2}`</span>;</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 180–183</span></div>
+        <div class="explain-content">
+          <div class="explain-text"><strong>Edge endpoints</strong>:<br/>
+          <code>x1, y1</code> = right-center of source node (where edge starts). <code>src.x + src.w</code> = left edge + width = right edge. <code>src.y + src.h/2</code> = top + half height = vertical center.<br/>
+          <code>x2, y2</code> = left-center of target node (where edge ends).</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 185–190</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">M ${x1} ${y1} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${x2} ${y2}</div>
+          <div class="explain-text"><strong>SVG Cubic Bezier Curve</strong>:<br/>
+          <code>M x1 y1</code> = "Move to" start point<br/>
+          <code>C cx1 cy1, cx2 cy2, x2 y2</code> = "Cubic bezier" with 2 control points<br/><br/>
+          <code>cx1</code> = at 1/3 of horizontal distance, at same y as source<br/>
+          <code>cx2</code> = at 2/3 of horizontal distance, at same y as target<br/><br/>
+          This creates an S-shaped smooth curve. The control points "pull" the line — they don't appear visually but define the curve shape.</div>
+          <div class="analogy">Like how a calligrapher curves a stroke — they don't draw a straight line but control the curve with pen pressure at certain points.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 5 — Color Interpolation</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>process_map.js — _interpolateColor()</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">350</span><span class="line-code">  <span class="fn">_interpolateColor</span>(color1, color2, t) {</span></div>
+        <div class="code-line"><span class="line-num">351</span><span class="line-code">    t <span class="op">=</span> Math.<span class="fn">max</span>(<span class="num">0</span>, Math.<span class="fn">min</span>(<span class="num">1</span>, t));</span></div>
+        <div class="code-line"><span class="line-num">352</span><span class="line-code">    <span class="kw">const</span> r1 <span class="op">=</span> <span class="cls">parseInt</span>(color1.<span class="fn">slice</span>(<span class="num">1</span>, <span class="num">3</span>), <span class="num">16</span>);</span></div>
+        <div class="code-line"><span class="line-num">353</span><span class="line-code">    <span class="kw">const</span> g1 <span class="op">=</span> <span class="cls">parseInt</span>(color1.<span class="fn">slice</span>(<span class="num">3</span>, <span class="num">5</span>), <span class="num">16</span>);</span></div>
+        <div class="code-line"><span class="line-num">354</span><span class="line-code">    <span class="kw">const</span> b1 <span class="op">=</span> <span class="cls">parseInt</span>(color1.<span class="fn">slice</span>(<span class="num">5</span>, <span class="num">7</span>), <span class="num">16</span>);</span></div>
+        <div class="code-line"><span class="line-num">356</span><span class="line-code">    <span class="kw">const</span> r <span class="op">=</span> Math.<span class="fn">round</span>(r1 <span class="op">+</span> (r2 <span class="op">-</span> r1) <span class="op">*</span> t);</span></div>
+        <div class="code-line"><span class="line-num">357</span><span class="line-code">    <span class="kw">const</span> g <span class="op">=</span> Math.<span class="fn">round</span>(g1 <span class="op">+</span> (g2 <span class="op">-</span> g1) <span class="op">*</span> t);</span></div>
+        <div class="code-line"><span class="line-num">358</span><span class="line-code">    <span class="kw">const</span> b <span class="op">=</span> Math.<span class="fn">round</span>(b1 <span class="op">+</span> (b2 <span class="op">-</span> b1) <span class="op">*</span> t);</span></div>
+        <div class="code-line"><span class="line-num">360</span><span class="line-code">    <span class="kw">return</span> <span class="str">`rgb(${r}, ${g}, ${b})`</span>;</span></div>
+        <div class="code-line"><span class="line-num">361</span><span class="line-code">  }</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 351</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">t = Math.max(0, Math.min(1, t))</div>
+          <div class="explain-text"><strong>Clamping</strong> — ensures t stays between 0 and 1.<br/>
+          <code>Math.min(1, t)</code> = if t > 1, use 1. Otherwise use t.<br/>
+          <code>Math.max(0, ...)</code> = if result < 0, use 0.<br/>
+          Combined: t = Math.clamp(t, 0, 1). This prevents invalid colors like rgb(-10, 300, 50).</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 352–354</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">parseInt(color1.slice(1, 3), 16)</div>
+          <div class="explain-text"><strong>Parsing hex colors</strong>. Color "#4f8ef7" = # + FF + GG + BB (6 hex digits).<br/>
+          <code>slice(1, 3)</code> = characters 1 to 3 = "4f" (red channel)<br/>
+          <code>slice(3, 5)</code> = "8e" (green channel)<br/>
+          <code>slice(5, 7)</code> = "f7" (blue channel)<br/>
+          <code>parseInt("4f", 16)</code> = convert hex string to decimal number (79).</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 356–358</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">r = Math.round(r1 + (r2 - r1) * t)</div>
+          <div class="explain-text"><strong>Linear interpolation formula</strong>: <code>start + (end - start) × t</code><br/>
+          When t=0: result = r1 (pure color1)<br/>
+          When t=1: result = r2 (pure color2)<br/>
+          When t=0.5: result = midpoint (blend of both)<br/><br/>
+          This separately interpolates R, G, B channels. Result: smooth color gradient from blue (#4f8ef7) to red (#ef4444) based on bottleneck severity.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     CHAPTER 6: dashboard.js
+========================================================= -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">Chapter 6 · dashboard.js</div>
+    <div class="chapter-title">The Controller 🎮</div>
+    <div class="chapter-file">static/js/dashboard.js</div>
+    <div class="chapter-desc">
+      The dashboard controller is the glue that connects everything. It listens
+      for user interactions (clicks, file uploads), calls ProcessEngine to analyze
+      data, and uses Chart.js to render the results. It implements the MVC
+      (Model-View-Controller) pattern.
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 1 — State Management and Initialization</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>dashboard.js — State and Init</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">1</span><span class="line-code"><span class="kw">const</span> State <span class="op">=</span> {</span></div>
+        <div class="code-line"><span class="line-num">2</span><span class="line-code">  <span class="obj">dataLoaded</span>: <span class="kw">false</span>,</span></div>
+        <div class="code-line"><span class="line-num">3</span><span class="line-code">  <span class="obj">currentView</span>: <span class="str">'upload'</span>,</span></div>
+        <div class="code-line"><span class="line-num">4</span><span class="line-code">  <span class="obj">charts</span>: {},</span></div>
+        <div class="code-line"><span class="line-num">5</span><span class="line-code">  <span class="obj">stats</span>: <span class="kw">null</span>,</span></div>
+        <div class="code-line"><span class="line-num">6</span><span class="line-code">};</span></div>
+        <div class="code-line"><span class="line-num">8</span><span class="line-code">document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentLoaded'</span>, () <span class="op">=&gt;</span> {</span></div>
+        <div class="code-line"><span class="line-num">9</span><span class="line-code">  <span class="fn">initNavigation</span>();</span></div>
+        <div class="code-line"><span class="line-num">10</span><span class="line-code">  <span class="fn">initUpload</span>();</span></div>
+        <div class="code-line"><span class="line-num">11</span><span class="line-code">  <span class="fn">initMapControls</span>();</span></div>
+        <div class="code-line"><span class="line-num">12</span><span class="line-code">  <span class="fn">switchView</span>(<span class="str">'upload'</span>);</span></div>
+        <div class="code-line"><span class="line-num">13</span><span class="line-code">});</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 1–6</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">const State = { dataLoaded: false, ... }</div>
+          <div class="explain-text"><strong>Global State Object</strong> — a single source of truth for the app's current state.<br/>
+          <code>dataLoaded: false</code> — tracks if the user has loaded data yet (prevents navigating to charts with no data).<br/>
+          <code>currentView: 'upload'</code> — which page is currently visible.<br/>
+          <code>charts: {}</code> — stores Chart.js instances so we can destroy them before re-creating.<br/>
+          <code>stats: null</code> — will hold the results from ProcessEngine.load().</div>
+          <div class="tip-box">In large apps, state management (like Redux in React) is a major architecture concern. Our simple State object is the beginner version of the same concept.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 8–13</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">document.addEventListener('DOMContentLoaded', () => { ... })</div>
+          <div class="explain-text"><strong>DOMContentLoaded event</strong> — fires when the browser has finished parsing ALL the HTML and built the DOM (Document Object Model) tree. Our JS runs AFTER this event.<br/><br/>
+          <code>() => { ... }</code> is an <strong>arrow function</strong> — shorthand for <code>function() { ... }</code>.<br/><br/>
+          Without this, if you tried to <code>getElementById('someButton')</code> before the HTML parsed, it would return null (the button doesn't exist yet).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 2 — Async/Await and the Loading Sequence</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>dashboard.js — loadSampleData() async function</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">60</span><span class="line-code"><span class="kw">async function</span> <span class="fn">loadSampleData</span>() {</span></div>
+        <div class="code-line"><span class="line-num">61</span><span class="line-code">  <span class="fn">showLoading</span>(<span class="str">'Generating sample event log...'</span>);</span></div>
+        <div class="code-line"><span class="line-num">63</span><span class="line-code">  <span class="kw">try</span> {</span></div>
+        <div class="code-line"><span class="line-num">64</span><span class="line-code">    <span class="kw">await</span> <span class="fn">updateLoadingStep</span>(<span class="str">'Generating 500 order cases...'</span>, <span class="num">0</span>);</span></div>
+        <div class="code-line"><span class="line-num">65</span><span class="line-code">    <span class="kw">await</span> <span class="fn">sleep</span>(<span class="num">50</span>);</span></div>
+        <div class="code-line"><span class="line-num">67</span><span class="line-code">    <span class="kw">const</span> events <span class="op">=</span> DataGenerator.<span class="fn">generateEventLog</span>(<span class="num">500</span>);</span></div>
+        <div class="code-line"><span class="line-num">68</span><span class="line-code">    <span class="kw">const</span> stats <span class="op">=</span> ProcessEngine.<span class="fn">load</span>(events);</span></div>
+        <div class="code-line"><span class="line-num">70</span><span class="line-code">    State.stats <span class="op">=</span> stats;</span></div>
+        <div class="code-line"><span class="line-num">71</span><span class="line-code">    State.dataLoaded <span class="op">=</span> <span class="kw">true</span>;</span></div>
+        <div class="code-line"><span class="line-num">72</span><span class="line-code">    <span class="fn">switchView</span>(<span class="str">'overview'</span>);</span></div>
+        <div class="code-line"><span class="line-num">73</span><span class="line-code">  } <span class="kw">catch</span> (err) {</span></div>
+        <div class="code-line"><span class="line-num">74</span><span class="line-code">    <span class="fn">hideLoading</span>();</span></div>
+        <div class="code-line"><span class="line-num">75</span><span class="line-code">    alert(<span class="str">`Error: ${err.message}`</span>);</span></div>
+        <div class="code-line"><span class="line-num">76</span><span class="line-code">  }</span></div>
+        <div class="code-line"><span class="line-num">77</span><span class="line-code">}</span></div>
+        <div class="code-line"><span class="line-num">79</span><span class="line-code"><span class="kw">function</span> <span class="fn">sleep</span>(ms) {</span></div>
+        <div class="code-line"><span class="line-num">80</span><span class="line-code">  <span class="kw">return</span> <span class="kw">new</span> <span class="cls">Promise</span>(<span class="obj">resolve</span> <span class="op">=&gt;</span> <span class="fn">setTimeout</span>(resolve, ms));</span></div>
+        <div class="code-line"><span class="line-num">81</span><span class="line-code">}</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 60</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">async function loadSampleData()</div>
+          <div class="explain-text"><strong>async/await</strong> = modern JavaScript for handling asynchronous operations. Without async/await, asynchronous code uses "callback hell" (nested functions inside functions).<br/><br/>
+          A function marked <code>async</code> always returns a Promise. Inside it, you can use <code>await</code> to pause and wait for another Promise to resolve before continuing — making async code look synchronous.</div>
+          <div class="analogy">async/await is like saying "wait here until this task is done" instead of "call me back when it's done". Much easier to read and reason about.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 63–76</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">try { ... } catch (err) { ... }</div>
+          <div class="explain-text"><strong>Try-Catch error handling</strong>. Code in the <code>try</code> block runs normally. If ANY line throws an error, execution jumps to the <code>catch</code> block. <code>err</code> = the error object with <code>err.message</code> describing what went wrong.<br/><br/>
+          Without try-catch, a single error would silently break the entire app with no user feedback.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 79–81</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }</div>
+          <div class="explain-text"><strong>Custom sleep function</strong>. JavaScript has no built-in sleep(). We create one using:<br/>
+          <code>Promise</code> = an object representing a future value (pending → fulfilled/rejected)<br/>
+          <code>setTimeout(resolve, ms)</code> = after ms milliseconds, call resolve() which fulfills the Promise<br/>
+          <code>await sleep(50)</code> = pause here for 50ms<br/><br/>
+          Why do we need sleep? To give the browser a 50ms window to <em>repaint</em> the loading UI before starting heavy computation. Without it, the loading spinner would never appear!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 3 — Counter Animation (requestAnimationFrame)</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>dashboard.js — animateCounter()</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">200</span><span class="line-code"><span class="kw">function</span> <span class="fn">animateCounter</span>(elementId, target) {</span></div>
+        <div class="code-line"><span class="line-num">201</span><span class="line-code">  <span class="kw">const</span> el <span class="op">=</span> document.<span class="fn">getElementById</span>(elementId);</span></div>
+        <div class="code-line"><span class="line-num">202</span><span class="line-code">  <span class="kw">const</span> duration <span class="op">=</span> <span class="num">800</span>;</span></div>
+        <div class="code-line"><span class="line-num">203</span><span class="line-code">  <span class="kw">const</span> start <span class="op">=</span> performance.<span class="fn">now</span>();</span></div>
+        <div class="code-line"><span class="line-num">205</span><span class="line-code">  <span class="kw">const</span> tick <span class="op">=</span> (now) <span class="op">=&gt;</span> {</span></div>
+        <div class="code-line"><span class="line-num">206</span><span class="line-code">    <span class="kw">const</span> elapsed <span class="op">=</span> now <span class="op">-</span> start;</span></div>
+        <div class="code-line"><span class="line-num">207</span><span class="line-code">    <span class="kw">const</span> progress <span class="op">=</span> Math.<span class="fn">min</span>(elapsed <span class="op">/</span> duration, <span class="num">1</span>);</span></div>
+        <div class="code-line"><span class="line-num">208</span><span class="line-code">    <span class="kw">const</span> eased <span class="op">=</span> <span class="num">1</span> <span class="op">-</span> Math.<span class="fn">pow</span>(<span class="num">1</span> <span class="op">-</span> progress, <span class="num">4</span>);</span></div>
+        <div class="code-line"><span class="line-num">209</span><span class="line-code">    <span class="kw">const</span> current <span class="op">=</span> Math.<span class="fn">round</span>(target <span class="op">*</span> eased);</span></div>
+        <div class="code-line"><span class="line-num">210</span><span class="line-code">    el.textContent <span class="op">=</span> current.<span class="fn">toLocaleString</span>();</span></div>
+        <div class="code-line"><span class="line-num">211</span><span class="line-code">    <span class="kw">if</span> (progress <span class="op">&lt;</span> <span class="num">1</span>) <span class="fn">requestAnimationFrame</span>(tick);</span></div>
+        <div class="code-line"><span class="line-num">212</span><span class="line-code">  };</span></div>
+        <div class="code-line"><span class="line-num">213</span><span class="line-code">  <span class="fn">requestAnimationFrame</span>(tick);</span></div>
+        <div class="code-line"><span class="line-num">214</span><span class="line-code">}</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 203</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">performance.now()</div>
+          <div class="explain-text">Returns the current time in milliseconds with sub-millisecond precision. Unlike <code>Date.now()</code>, it's not affected by system clock changes. Used to measure elapsed time since animation started.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 205–213</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">requestAnimationFrame(tick)</div>
+          <div class="explain-text"><strong>requestAnimationFrame (rAF)</strong> — asks the browser to call a function just before the next screen repaint (typically 60 times per second = 60fps).<br/><br/>
+          The <code>tick</code> function is called repeatedly:<br/>
+          1. Calculate how much time has passed (elapsed)<br/>
+          2. Calculate progress as 0→1 (elapsed / total_duration)<br/>
+          3. Apply easing formula to make it feel smooth<br/>
+          4. Update the number on screen<br/>
+          5. If not done yet, schedule the next frame<br/>
+          6. When progress reaches 1 (100%), stop</div>
+          <div class="analogy">Like a flip-book animation: each frame is one "tick". Show frame 1, then frame 2, then frame 3... at 60fps it looks smooth.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 208</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">eased = 1 - Math.pow(1 - progress, 4)</div>
+          <div class="explain-text"><strong>easeOutQuart easing</strong>. Without easing, animation moves at constant speed (linear). Easing makes it start fast and decelerate naturally.<br/><br/>
+          At progress=0: eased = 1 - (1)^4 = 0 (start)<br/>
+          At progress=0.5: eased = 1 - (0.5)^4 = 0.9375 (90% done at halfway!)<br/>
+          At progress=1: eased = 1 - 0 = 1 (end)<br/><br/>
+          The counter races up quickly then slows down — feels snappy and satisfying!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Part 4 — File Upload with FileReader API</div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span>dashboard.js — CSV File Handling</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="line-num">90</span><span class="line-code">  zone.<span class="fn">addEventListener</span>(<span class="str">'dragover'</span>, (e) <span class="op">=&gt;</span> {</span></div>
+        <div class="code-line"><span class="line-num">91</span><span class="line-code">    e.<span class="fn">preventDefault</span>();</span></div>
+        <div class="code-line"><span class="line-num">92</span><span class="line-code">    zone.classList.<span class="fn">add</span>(<span class="str">'dragover'</span>);</span></div>
+        <div class="code-line"><span class="line-num">93</span><span class="line-code">  });</span></div>
+        <div class="code-line"><span class="line-num">95</span><span class="line-code">  zone.<span class="fn">addEventListener</span>(<span class="str">'drop'</span>, (e) <span class="op">=&gt;</span> {</span></div>
+        <div class="code-line"><span class="line-num">96</span><span class="line-code">    e.<span class="fn">preventDefault</span>();</span></div>
+        <div class="code-line"><span class="line-num">97</span><span class="line-code">    <span class="kw">const</span> file <span class="op">=</span> e.dataTransfer.files[<span class="num">0</span>];</span></div>
+        <div class="code-line"><span class="line-num">98</span><span class="line-code">    <span class="kw">if</span> (file) <span class="fn">processCSVFile</span>(file);</span></div>
+        <div class="code-line"><span class="line-num">99</span><span class="line-code">  });</span></div>
+        <div class="code-line"><span class="line-num">105</span><span class="line-code"><span class="kw">function</span> <span class="fn">readFileAsText</span>(file) {</span></div>
+        <div class="code-line"><span class="line-num">106</span><span class="line-code">  <span class="kw">return</span> <span class="kw">new</span> <span class="cls">Promise</span>((resolve, reject) <span class="op">=&gt;</span> {</span></div>
+        <div class="code-line"><span class="line-num">107</span><span class="line-code">    <span class="kw">const</span> reader <span class="op">=</span> <span class="kw">new</span> <span class="cls">FileReader</span>();</span></div>
+        <div class="code-line"><span class="line-num">108</span><span class="line-code">    reader.onload  <span class="op">=</span> e <span class="op">=&gt;</span> resolve(e.target.result);</span></div>
+        <div class="code-line"><span class="line-num">109</span><span class="line-code">    reader.onerror <span class="op">=</span> () <span class="op">=&gt;</span> reject(<span class="kw">new</span> <span class="cls">Error</span>(<span class="str">'Failed to read file'</span>));</span></div>
+        <div class="code-line"><span class="line-num">110</span><span class="line-code">    reader.<span class="fn">readAsText</span>(file);</span></div>
+        <div class="code-line"><span class="line-num">111</span><span class="line-code">  });</span></div>
+        <div class="code-line"><span class="line-num">112</span><span class="line-code">}</span></div>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 90–93</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">dragover → e.preventDefault()</div>
+          <div class="explain-text">Browser's default behavior when dragging a file is to navigate to that file. <code>e.preventDefault()</code> cancels the default and lets our code handle it. Without this, dragging a CSV would open it in a new tab instead of uploading it.<br/><br/>
+          <code>classList.add('dragover')</code> adds a CSS class to visually highlight the drop zone when hovering.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Line 97</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">e.dataTransfer.files[0]</div>
+          <div class="explain-text">When files are dropped, they're available in <code>event.dataTransfer.files</code> — a FileList object. <code>[0]</code> gets the first file (we only handle one). This is the browser's Drag & Drop API.</div>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-lines"><span class="line-badge">Lines 105–112</span></div>
+        <div class="explain-content">
+          <div class="explain-code-snippet">new FileReader().readAsText(file)</div>
+          <div class="explain-text"><strong>FileReader API</strong> — browser API for reading local files as text, binary, or data URLs. Reading is asynchronous (files can be large), so we wrap it in a Promise.<br/><br/>
+          <code>reader.onload</code> = callback when reading succeeds → resolve the Promise with file content<br/>
+          <code>reader.onerror</code> = callback when reading fails → reject the Promise with an error<br/>
+          <code>reader.readAsText(file)</code> = start reading the file</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     SUMMARY PAGE
+========================================================= -->
+<div class="chapter" style="page-break-before:always;">
+  <div class="chapter-header" style="background: linear-gradient(135deg, #064e3b, #065f46);">
+    <div class="chapter-num" style="color:#6ee7b7;">✅ Summary</div>
+    <div class="chapter-title">Concepts You Now Know</div>
+    <div class="chapter-desc" style="color:#a7f3d0;">
+      You've gone from zero to understanding a full-stack process mining application.
+      Here's a complete map of everything you learned.
+    </div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-card-title">HTML Concepts</div>
+      <div style="font-size:0.82rem;color:#374151;line-height:1.8;">
+        ✓ DOCTYPE declaration<br/>
+        ✓ Semantic elements (nav, main, section)<br/>
+        ✓ class vs id attributes<br/>
+        ✓ data-* custom attributes<br/>
+        ✓ Single-Page Application (SPA)<br/>
+        ✓ Script loading order<br/>
+        ✓ Meta tags for SEO
+      </div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-title">CSS Concepts</div>
+      <div style="font-size:0.82rem;color:#374151;line-height:1.8;">
+        ✓ CSS Variables (design tokens)<br/>
+        ✓ CSS Grid layout<br/>
+        ✓ Box-sizing border-box<br/>
+        ✓ @keyframes animations<br/>
+        ✓ Transitions &amp; easing<br/>
+        ✓ Linear gradients<br/>
+        ✓ rgba() colors with opacity
+      </div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-title">JavaScript Concepts</div>
+      <div style="font-size:0.82rem;color:#374151;line-height:1.8;">
+        ✓ const / let<br/>
+        ✓ Objects, Arrays, Maps<br/>
+        ✓ for...of loops<br/>
+        ✓ Arrow functions<br/>
+        ✓ Template literals<br/>
+        ✓ Destructuring<br/>
+        ✓ Default parameters<br/>
+        ✓ async/await + Promises<br/>
+        ✓ Try-catch error handling<br/>
+        ✓ requestAnimationFrame
+      </div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-title">Data Science / Analytics</div>
+      <div style="font-size:0.82rem;color:#374151;line-height:1.8;">
+        ✓ Event log structure<br/>
+        ✓ GROUP BY aggregation<br/>
+        ✓ Standard deviation<br/>
+        ✓ Percentiles (P90)<br/>
+        ✓ Normalization (0–1 scaling)<br/>
+        ✓ Weighted scoring<br/>
+        ✓ Box-Muller transform<br/>
+        ✓ Process variants
+      </div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-title">Graph Theory / Algorithms</div>
+      <div style="font-size:0.82rem;color:#374151;line-height:1.8;">
+        ✓ Directed graph (nodes + edges)<br/>
+        ✓ Directly-Follows Graph (DFG)<br/>
+        ✓ In-degree of nodes<br/>
+        ✓ Topological sort<br/>
+        ✓ Breadth-First Search (BFS)<br/>
+        ✓ Graph layered layout
+      </div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-title">Libraries Used</div>
+      <div style="font-size:0.82rem;color:#374151;line-height:1.8;">
+        ✓ D3.js — SVG data visualization<br/>
+        ✓ Chart.js — Business charts<br/>
+        ✓ Google Fonts API<br/>
+        ✓ SVG Path commands (M, C, L)<br/>
+        ✓ SVG Markers (arrowheads)<br/>
+        ✓ FileReader API<br/>
+        ✓ Drag &amp; Drop API
+      </div>
+    </div>
+  </div>
+
+  <div class="concept-box">
+    <h4>🚀 What to Learn Next</h4>
+    <p>
+      <strong>1. Python version:</strong> Recreate process_engine.js in Python using pandas + networkx. You'll find it's almost identical!<br/>
+      <strong>2. Real SQL:</strong> Load the event log into SQLite and write actual SQL queries for GROUP BY, AVG, window functions.<br/>
+      <strong>3. React:</strong> Convert this to a React app where each view is a Component.<br/>
+      <strong>4. Real process mining:</strong> Try pm4py (Python library) — it's what researchers use.<br/>
+      <strong>5. Database:</strong> Store events in PostgreSQL and query with Python/Flask backend.
+    </p>
+  </div>
+
+  <div style="text-align:center;padding:40px 0;color:#9ca3af;font-size:0.82rem;border-top:1px solid #e5e7eb;margin-top:40px;">
+    <div style="font-size:1.5rem;margin-bottom:8px;">⚡ ProcessMind</div>
+    <div>Business Process Analytics Dashboard — Complete Code Guide</div>
+    <div style="margin-top:4px;">Built with HTML · CSS · JavaScript · D3.js · Chart.js</div>
+  </div>
+</div>
+
+</body>
+</html>
