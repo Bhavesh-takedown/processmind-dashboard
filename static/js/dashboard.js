@@ -734,7 +734,7 @@ function renderBarChart(canvasId, labels, data, opts = {}) {
   }
 
   State.charts[canvasId] = new Chart(canvas, {
-    type: opts.horizontal ? 'bar' : 'bar',
+    type: 'bar',
     data: {
       labels,
       datasets: [{
@@ -821,8 +821,10 @@ async function updateLoadingStep(msg, stepIdx) {
   // Mark previous steps as done
   for (let i = 0; i < stepIdx; i++) {
     const el = document.getElementById(`lstep-${i}`);
-    if (el) el.textContent = `✅ ${LOADING_STEPS[i]}`;
-    if (el) el.className = 'loading-step done';
+    if (el) {
+      el.textContent = `✅ ${LOADING_STEPS[i]}`;
+      el.className = 'loading-step done';
+    }
   }
 
   // Mark current step as active
