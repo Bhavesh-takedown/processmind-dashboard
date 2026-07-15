@@ -20,8 +20,10 @@
 const State = {
   dataLoaded: false,
   currentView: 'upload',
-  charts: {},     // Stores Chart.js instances (to destroy before re-rendering)
-  stats: null,    // Cached ProcessEngine.stats
+  charts: {},           // Stores Chart.js instances (to destroy before re-rendering)
+  stats: null,          // Cached ProcessEngine.stats
+  counterRAFs: {},      // perf: tracks active requestAnimationFrame IDs per element
+  lastCaseSort: null,   // perf: memoize last sort key to skip redundant re-renders
 };
 
 // ============================================================
@@ -47,21 +49,22 @@ document.addEventListener('DOMContentLoaded', () => {
 // NAVIGATION
 // ============================================================
 function initNavigation() {
-  // LEARN: querySelectorAll returns all matching elements.
-  // We attach the same click handler to all nav items.
-  document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', (e) => {
-      e.preventDefault();
+  // perf: use event delegation on the sidebar container instead of attaching
+  // individual listeners to every .nav-item — fewer event handler objects.
+  const sidebar = document.querySelector('.sidebar') || document;
+  sidebar.addEventListener('click', (e) => {
+    const item = e.target.closest('.nav-item');
+    if (!item) return;
+    e.preventDefault();
 
-      const view = item.dataset.view;  // Read data-view attribute
+    const view = item.dataset.view;  // Read data-view attribute
 
-      if (view !== 'upload' && !State.dataLoaded) {
-        showNoDataMessage();
-        return;
-      }
+    if (view !== 'upload' && !State.dataLoaded) {
+      showNoDataMessage();
+      return;
+    }
 
-      switchView(view);
-    });
+    switchView(view);
   });
 
   // Top-bar "Load Sample Data" button
@@ -105,6 +108,10 @@ function switchView(viewName) {
   const [title, subtitle] = titles[viewName] || ['Dashboard', ''];
   document.getElementById('pageTitle').textContent = title;
   document.getElementById('pageSubtitle').textContent = subtitle;
+
+  // perf: bail early if we are already on this view — avoids redundant chart
+  // destruction / recreation cycles when the user clicks the active nav item.
+  if (State.currentView === viewName && State.dataLoaded) return;
 
   State.currentView = viewName;
 
@@ -516,6 +523,10 @@ function initCaseExplorer() {
 function renderCaseExplorer(sortBy = 'duration-desc') {
   if (!State.stats) return;
 
+  // perf: skip the sort + DOM rebuild when the sort key hasn't changed
+  if (State.lastCaseSort === sortBy && document.getElementById('caseList').childElementCount > 0) return;
+  State.lastCaseSort = sortBy;
+
   let cases = [...State.stats.cases.values()];
 
   // LEARN: Array.sort() with a comparator function
@@ -530,6 +541,8 @@ function renderCaseExplorer(sortBy = 'duration-desc') {
 
   const list = document.getElementById('caseList');
 
+  // perf: build all markup as one string then set innerHTML once to minimise
+  // layout thrashing from repeated DOM mutations.
   list.innerHTML = cases.slice(0, 200).map(c => {
     const ratio = c.duration / maxDuration;
     const dotColor = ratio > 0.7 ? '#ef4444' : ratio > 0.4 ? '#f59e0b' : '#10b981';
@@ -545,12 +558,21 @@ function renderCaseExplorer(sortBy = 'duration-desc') {
   }).join('');
 }
 
-function filterCaseList(query) {
-  document.querySelectorAll('.case-item').forEach(item => {
-    const id = item.dataset.caseId || '';
-    item.style.display = id.toLowerCase().includes(query.toLowerCase()) ? '' : 'none';
-  });
-}
+// perf: debounce so DOM mutations only happen after the user pauses typing
+// rather than on every single keystroke (avoids expensive style recalcs).
+const filterCaseList = (() => {
+  let _timer = null;
+  return function filterCaseList(query) {
+    clearTimeout(_timer);
+    _timer = setTimeout(() => {
+      const lowerQ = query.toLowerCase();
+      document.querySelectorAll('.case-item').forEach(item => {
+        const id = item.dataset.caseId || '';
+        item.style.display = id.toLowerCase().includes(lowerQ) ? '' : 'none';
+      });
+    }, 120); // 120 ms debounce — fast enough to feel instant
+  };
+})();
 
 function showCaseDetail(caseId) {
   // Update active state in list
@@ -859,6 +881,12 @@ function animateCounter(elementId, target) {
   const el = document.getElementById(elementId);
   if (!el) return;
 
+  // perf: cancel any in-flight animation on this element before starting a
+  // new one — prevents multiple overlapping RAF loops writing to the same node.
+  if (State.counterRAFs[elementId]) {
+    cancelAnimationFrame(State.counterRAFs[elementId]);
+  }
+
   const duration = 800;
   const start = performance.now();
   const startVal = 0;
@@ -872,10 +900,14 @@ function animateCounter(elementId, target) {
 
     el.textContent = current.toLocaleString();
 
-    if (progress < 1) requestAnimationFrame(tick);
+    if (progress < 1) {
+      State.counterRAFs[elementId] = requestAnimationFrame(tick);
+    } else {
+      delete State.counterRAFs[elementId];
+    }
   };
 
-  requestAnimationFrame(tick);
+  State.counterRAFs[elementId] = requestAnimationFrame(tick);
 }
 
 function formatDuration(hours) {
