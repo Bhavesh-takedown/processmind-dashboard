@@ -1,0 +1,43 @@
+# OS / system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor and IDE
+.vscode/
+.idea/
+*.suo
+*.user
+*.swp
+*.swo
+*~
+
+# Node (if ever used for tooling)
+node_modules/
+npm-debug.log*
+yarn-error.log
+
+# Python server artifacts
+__pycache__/
+*.pyc
+*.pyo
+
+# Build / dist outputs
+dist/
+build/
+*.min.js.map
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+
+# Test coverage
+coverage/
+
+# Temporary files
+*.tmp
+*.bak
