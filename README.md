@@ -6,6 +6,8 @@
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?logo=chartdotjs&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen)
 
 ---
 
@@ -44,6 +46,7 @@ User uploads CSV → FileReader API loads data in-memory
 process_dashboard/
 ├── index.html               # Main entry point / Single Page App
 ├── code_guide.html          # Comprehensive codebase explanation
+├── CHANGELOG.md             # Version history
 ├── static/
 │   ├── css/
 │   │   └── dashboard.css    # All styles and themes
@@ -52,7 +55,8 @@ process_dashboard/
 │       ├── process_engine.js# Model: CSV parsing and analytics
 │       ├── process_map.js   # View logic for the interactive map
 │       └── data_generator.js# Generates mock event logs
-└── data/                    # Sample datasets (if any)
+└── data/
+    └── sample_order_to_cash.csv  # Ready-to-upload sample dataset
 ```
 
 ## Setup
@@ -75,6 +79,10 @@ python -m http.server 8000
 ```
 Then open **http://localhost:8000** in your browser.
 
+### 3. Try it immediately
+- Click **"✨ Load Sample Data"** in the top right to generate a synthetic 500-case event log in seconds, **or**
+- Upload the included **`data/sample_order_to_cash.csv`** file to explore a real pre-built dataset covering all 5 process variants.
+
 ## Data Format
 
 To upload your own data, use a CSV file with the following headers:
@@ -84,11 +92,41 @@ To upload your own data, use a CSV file with the following headers:
 - `resource` (Optional): The person or system performing the activity.
 - `cost` (Optional): Any cost associated with the activity.
 
+Both comma (`,`) and semicolon (`;`) delimiters are supported.
+
 ## Notes
 
 - All processing happens in your browser's memory. Very large CSV files (e.g., >50MB) may cause the browser to slow down.
 - If you don't have an event log handy, click **"✨ Load Sample Data"** in the top right of the dashboard to try it out immediately.
 
+## Contributing
+
+Contributions are welcome! Here's how to get started:
+
+1. **Fork** the repository and create a feature branch: `git checkout -b feat/your-feature`
+2. Make your changes — keep each commit focused and descriptive
+3. Ensure the app still works by opening `index.html` in a browser and testing all views
+4. Open a **Pull Request** with a clear description of what changed and why
+
+### Commit message format
+This project uses [Conventional Commits](https://www.conventionalcommits.org/):
+```
+feat: add export to CSV button
+fix: correct timestamp parsing for ISO 8601 with timezone
+docs: update README setup instructions
+chore: add .gitignore
+refactor: extract chart helpers into utils module
+perf: memoize bottleneck sort result
+```
+
 ---
 
-*Built as an AI portfolio project demonstrating: Data Visualization · Process Mining · Vanilla JS · Single Page Applications*
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md) for a full version history.
+
+---
+
+## License
+
+MIT © Bhavesh — built as an AI portfolio project demonstrating: Data Visualization · Process Mining · Vanilla JS · Single Page Applications
