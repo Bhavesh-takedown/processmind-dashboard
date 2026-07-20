@@ -37,26 +37,31 @@ const DataGenerator = {
   VARIANTS: [
     // Happy path (60% of cases): all steps in order
     {
+      name: 'Happy Path',
       weight: 0.60,
       path: [0, 1, 2, 3, 4, 5, 6, 7, 8]
     },
     // Fast track (15%): skip credit check for trusted customers
     {
+      name: 'Fast Track',
       weight: 0.15,
       path: [0, 2, 3, 4, 5, 6, 7, 8]
     },
     // Credit rejection (10%): order rejected after credit check
     {
+      name: 'Credit Rejection',
       weight: 0.10,
       path: [0, 1, 2]  // Ends early with "Order Closed" manually
     },
     // Rework loop (10%): inventory check fails, recheck needed
     {
+      name: 'Rework Loop',
       weight: 0.10,
       path: [0, 1, 2, 3, 3, 4, 5, 6, 7, 8]  // Note: activity 3 repeats!
     },
     // Express (5%): minimal steps for priority orders
     {
+      name: 'Express',
       weight: 0.05,
       path: [0, 4, 5, 6, 7, 8]
     }
