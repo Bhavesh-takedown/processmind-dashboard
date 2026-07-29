@@ -17,6 +17,20 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.3.0] — 2026-07-29
+
+### Added
+- **Keyboard shortcuts modal** — press `?` or click the new `?` badge in the
+  top-bar to open an animated panel listing all navigation and action shortcuts
+  (`1`–`5` to switch views, `U` for upload, `S` to load sample data, `Esc` to close)
+- Shortcuts are safely disabled when focus is inside an `<input>`, `<textarea>`,
+  or `<select>` to prevent accidental triggering while typing
+
+### Changed
+- Top-bar now renders a circular `?` help button alongside the existing controls
+
+---
+
 ## [1.2.0] — 2026-07-20
 
 ### Added

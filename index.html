@@ -77,6 +77,7 @@
       <button class="btn-primary" id="loadSampleBtn">
         ✨ Load Sample Data
       </button>
+      <button class="shortcuts-btn" id="shortcutsBtn" title="Keyboard shortcuts (?)" aria-label="Show keyboard shortcuts">?</button>
     </div>
   </header>
 
@@ -370,6 +371,222 @@
 
 <!-- Tooltip for charts -->
 <div class="global-tooltip" id="globalTooltip" style="display:none;"></div>
+
+<!-- ============================================================
+     KEYBOARD SHORTCUTS MODAL
+     Triggered by pressing "?" or clicking the ? button in the topbar.
+     Closed by pressing Escape or clicking the backdrop.
+============================================================ -->
+<div class="shortcuts-backdrop" id="shortcutsBackdrop" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle" style="display:none;">
+  <div class="shortcuts-modal">
+    <div class="shortcuts-header">
+      <h2 id="shortcutsTitle">⌨️ Keyboard Shortcuts</h2>
+      <button class="shortcuts-close" id="shortcutsClose" aria-label="Close shortcuts">&times;</button>
+    </div>
+    <div class="shortcuts-body">
+      <div class="shortcuts-group">
+        <h3>Navigation</h3>
+        <div class="shortcut-row"><kbd>1</kbd><span>Overview</span></div>
+        <div class="shortcut-row"><kbd>2</kbd><span>Process Map</span></div>
+        <div class="shortcut-row"><kbd>3</kbd><span>Bottlenecks</span></div>
+        <div class="shortcut-row"><kbd>4</kbd><span>Case Explorer</span></div>
+        <div class="shortcut-row"><kbd>5</kbd><span>Resources</span></div>
+        <div class="shortcut-row"><kbd>U</kbd><span>Load Event Log</span></div>
+      </div>
+      <div class="shortcuts-group">
+        <h3>Actions</h3>
+        <div class="shortcut-row"><kbd>S</kbd><span>Load sample data</span></div>
+        <div class="shortcut-row"><kbd>?</kbd><span>Toggle this panel</span></div>
+        <div class="shortcut-row"><kbd>Esc</kbd><span>Close this panel</span></div>
+      </div>
+    </div>
+    <p class="shortcuts-footer">Tip: shortcuts are disabled while typing in an input field.</p>
+  </div>
+</div>
+
+<style>
+/* ── Shortcuts button ─────────────────────────────────────────── */
+.shortcuts-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.65);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+  flex-shrink: 0;
+  margin-left: 8px;
+  line-height: 1;
+  font-family: inherit;
+}
+.shortcuts-btn:hover {
+  background: rgba(99,102,241,0.25);
+  border-color: rgba(99,102,241,0.55);
+  color: #a5b4fc;
+  transform: scale(1.1);
+}
+
+/* ── Modal backdrop ───────────────────────────────────────────── */
+.shortcuts-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(4px);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInBackdrop 0.18s ease;
+}
+@keyframes fadeInBackdrop { from { opacity:0; } to { opacity:1; } }
+
+/* ── Modal card ───────────────────────────────────────────────── */
+.shortcuts-modal {
+  background: #1e1e2e;
+  border: 1px solid rgba(99,102,241,0.3);
+  border-radius: 16px;
+  padding: 28px 32px;
+  width: min(480px, 90vw);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(99,102,241,0.12);
+  animation: slideUpModal 0.22s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes slideUpModal {
+  from { opacity:0; transform: translateY(24px) scale(0.97); }
+  to   { opacity:1; transform: translateY(0)    scale(1); }
+}
+
+/* ── Modal header ─────────────────────────────────────────────── */
+.shortcuts-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+.shortcuts-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin: 0;
+}
+.shortcuts-close {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.4);
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+.shortcuts-close:hover { color:#e2e8f0; background: rgba(255,255,255,0.08); }
+
+/* ── Shortcut groups & rows ───────────────────────────────────── */
+.shortcuts-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 32px;
+}
+.shortcuts-group h3 {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(165,180,252,0.7);
+  margin: 0 0 10px;
+}
+.shortcut-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.shortcut-row:last-child { border-bottom: none; }
+.shortcut-row kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 24px;
+  padding: 0 6px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: #a5b4fc;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.shortcut-row span {
+  font-size: 13px;
+  color: rgba(226,232,240,0.75);
+}
+
+/* ── Footer note ──────────────────────────────────────────────── */
+.shortcuts-footer {
+  margin: 20px 0 0;
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.3);
+  text-align: center;
+  font-style: italic;
+}
+</style>
+
+<script>
+/* ── Keyboard Shortcuts Modal ──────────────────────────────────── */
+(function () {
+  'use strict';
+  const backdrop = document.getElementById('shortcutsBackdrop');
+  const btn      = document.getElementById('shortcutsBtn');
+  const closeBtn = document.getElementById('shortcutsClose');
+
+  /** View key → nav item data-view map */
+  const VIEW_KEYS = { '1': 'overview', '2': 'process-map', '3': 'bottlenecks', '4': 'cases', '5': 'resources', 'u': 'upload' };
+
+  function openModal()  { backdrop.style.display = 'flex'; btn.setAttribute('aria-expanded','true');  }
+  function closeModal() { backdrop.style.display = 'none';  btn.setAttribute('aria-expanded','false'); }
+  function toggleModal(){ backdrop.style.display === 'none' ? openModal() : closeModal(); }
+
+  btn.addEventListener('click', toggleModal);
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', function(e){ if (e.target === backdrop) closeModal(); });
+
+  document.addEventListener('keydown', function (e) {
+    /* Ignore shortcuts when focus is inside an input / textarea */
+    const tag = document.activeElement && document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+    if (e.key === '?') { e.preventDefault(); toggleModal(); return; }
+    if (e.key === 'Escape' && backdrop.style.display !== 'none') { closeModal(); return; }
+
+    /* Only act on bare key presses (no Ctrl/Alt/Meta modifier) */
+    if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+    const view = VIEW_KEYS[e.key.toLowerCase()];
+    if (view) {
+      e.preventDefault();
+      const navItem = document.querySelector('[data-view="' + view + '"]');
+      if (navItem) navItem.click();
+    }
+
+    if (e.key.toLowerCase() === 's') {
+      e.preventDefault();
+      const sampleBtn = document.getElementById('loadSampleBtn');
+      if (sampleBtn) sampleBtn.click();
+    }
+  });
+})();
+</script>
 
 <!-- Scripts: Chart.js for charts, D3 for process map, then our logic -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
