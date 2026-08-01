@@ -10,10 +10,22 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Planned
-- Dark / light theme toggle
 - Export filtered case list as CSV
 - Shareable URL state (encode active filters in query string)
 - Conformance checking against a reference process model
+
+---
+
+## [1.4.0] — 2026-08-01
+
+### Added
+- **Dark / light theme toggle** — 🌙/☀️ button in the top-bar switches between
+  the existing dark palette and a clean light palette (`[data-theme="light"]`
+  CSS attribute pattern); preference is persisted in `localStorage`
+- `T` keyboard shortcut to toggle the theme from anywhere in the dashboard
+- Smooth CSS colour transition (`var(--ease-normal)`) on the `<html>` element
+  so the switch animates gracefully instead of hard-cutting
+- New shortcut row added to the ⌨️ Keyboard Shortcuts modal
 
 ---
 

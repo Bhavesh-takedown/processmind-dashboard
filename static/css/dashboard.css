@@ -69,6 +69,37 @@
   --ease-slow:   0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ---------- 1b. LIGHT THEME OVERRIDES ----------
+   Applied when <html data-theme="light"> is set by the theme toggle.
+   All variables below shadow the :root defaults, giving a clean
+   bright palette while the rest of the CSS stays unchanged.
+*/
+[data-theme="light"] {
+  --bg-primary:     #f0f4ff;
+  --bg-secondary:   #e4eaf8;
+  --bg-card:        #ffffff;
+  --bg-hover:       #dce4f5;
+  --bg-active:      #c7d5f0;
+
+  --text-primary:   #1a2035;
+  --text-secondary: #4a5568;
+  --text-muted:     #8892a4;
+
+  --border-subtle:  rgba(0,0,0,0.05);
+  --border-normal:  rgba(0,0,0,0.10);
+  --border-bright:  rgba(79,142,247,0.4);
+
+  --shadow-sm:   0 2px 8px rgba(0,0,0,0.08);
+  --shadow-md:   0 4px 20px rgba(0,0,0,0.12);
+  --shadow-lg:   0 8px 40px rgba(0,0,0,0.16);
+  --shadow-glow: 0 0 30px rgba(79,142,247,0.10);
+}
+
+/* Smooth colour transition when toggling themes */
+html {
+  transition: background-color var(--ease-normal), color var(--ease-normal);
+}
+
 /* ---------- 2. BASE TYPOGRAPHY ---------- */
 html, body {
   height: 100%;
