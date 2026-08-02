@@ -16,6 +16,21 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.5.0] — 2026-08-02
+
+### Added
+- **Copy Timeline button** — 📋 button in the Case Explorer detail panel copies
+  the full activity timeline (step number, activity, timestamp, resource, cost,
+  wait time, bottleneck flag) as formatted plain text to the clipboard
+- `copyTimeline(caseId)` helper in `dashboard.js` builds the text report and
+  calls the Clipboard API asynchronously
+- `showCopyToast(message)` utility renders a green slide-in toast notification
+  that auto-dismisses after 2.8 s — reusable for future copy operations
+- CSS for `.copy-timeline-btn` (ghost button, hover lift, green ✓ state) and
+  `@keyframes slideInToast` in `index.html`
+
+---
+
 ## [1.4.0] — 2026-08-01
 
 ### Added

@@ -543,6 +543,40 @@
   font-style: italic;
 }
 
+/* ── Copy Timeline Button ─────────────────────────────────────── */
+.copy-timeline-btn {
+  margin-left: auto;
+  flex-shrink: 0;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.05);
+  color: rgba(226,232,240,0.7);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.12s;
+  white-space: nowrap;
+}
+.copy-timeline-btn:hover {
+  background: rgba(79,142,247,0.18);
+  border-color: rgba(79,142,247,0.5);
+  color: #a5b4fc;
+  transform: translateY(-1px);
+}
+.copy-timeline-btn.copied {
+  background: rgba(16,185,129,0.2);
+  border-color: rgba(16,185,129,0.5);
+  color: #6ee7b7;
+}
+
+/* ── Toast slide-in animation ─────────────────────────────────── */
+@keyframes slideInToast {
+  from { opacity: 0; transform: translateY(12px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
 /* ── Theme Toggle Button ──────────────────────────────────────── */
 .theme-toggle-btn {
   width: 32px;

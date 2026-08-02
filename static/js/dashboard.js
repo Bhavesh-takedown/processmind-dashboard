@@ -593,6 +593,12 @@ function showCaseDetail(caseId) {
         <span class="badge badge-orange">${formatDuration(detail.duration)}</span>
         <span class="badge badge-green">${formatDate(detail.start)}</span>
       </div>
+      <button
+        class="copy-timeline-btn"
+        id="copyTimelineBtn"
+        title="Copy timeline to clipboard"
+        onclick="copyTimeline('${detail.id}')"
+      >📋 Copy</button>
     </div>
 
     <h3 style="margin-bottom:16px;color:#8892a4;font-size:0.85rem;font-weight:500;">PROCESS TIMELINE</h3>
@@ -619,6 +625,81 @@ function showCaseDetail(caseId) {
       `).join('')}
     </div>
   `;
+}
+
+/**
+ * copyTimeline(caseId)
+ *
+ * Formats the case's full activity timeline as plain text and
+ * copies it to the clipboard. Shows a brief success toast.
+ */
+function copyTimeline(caseId) {
+  const detail = ProcessEngine.getCaseDetails(caseId);
+  if (!detail) return;
+
+  const lines = [
+    `Case: ${detail.id}`,
+    `Steps: ${detail.steps}   Duration: ${formatDuration(detail.duration)}   Start: ${formatDate(detail.start)}`,
+    '─'.repeat(60),
+    ...detail.events.map((event, i) => {
+      const wait = event.waitHours > 0
+        ? `  ⟵ waited ${formatDuration(event.waitHours)}${event.waitCategory === 'slow' ? ' [BOTTLENECK]' : ''}`
+        : '  ⟵ Process Start';
+      const cost = event.cost > 0 ? `  $${event.cost}` : '';
+      return `${String(i + 1).padStart(2, '0')}. ${event.activity.padEnd(28)} ${formatDateTime(event.timestamp)}  👤 ${event.resource}${cost}\n    ${wait}`;
+    }),
+    '─'.repeat(60),
+    `Exported from ProcessMind — ${new Date().toLocaleString()}`,
+  ];
+
+  const text = lines.join('\n');
+
+  navigator.clipboard.writeText(text).then(() => {
+    showCopyToast('Timeline copied to clipboard ✓');
+    const btn = document.getElementById('copyTimelineBtn');
+    if (btn) {
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '📋 Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+  }).catch(() => {
+    showCopyToast('Copy failed — check browser permissions');
+  });
+}
+
+/**
+ * showCopyToast(message)
+ *
+ * Renders a small floating toast notification that auto-dismisses.
+ */
+function showCopyToast(message) {
+  const existing = document.getElementById('copyToast');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.id = 'copyToast';
+  toast.textContent = message;
+  toast.style.cssText = [
+    'position:fixed',
+    'bottom:28px',
+    'right:28px',
+    'background:rgba(16,185,129,0.95)',
+    'color:#fff',
+    'padding:10px 18px',
+    'border-radius:10px',
+    'font-size:13px',
+    'font-weight:600',
+    'box-shadow:0 8px 24px rgba(0,0,0,0.3)',
+    'z-index:99999',
+    'animation:slideInToast 0.25s cubic-bezier(0.34,1.56,0.64,1)',
+    'pointer-events:none',
+  ].join(';');
+
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2800);
 }
 
 function getActivityColor(category) {
