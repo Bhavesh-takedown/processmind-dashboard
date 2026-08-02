@@ -50,28 +50,37 @@ const ProcessMap = {
 
     // LEARN: Define an arrowhead marker — reused by all edges
     const defs = this.svg.append('defs');
-    defs.append('marker')
-      .attr('id', 'arrowhead')
-      .attr('viewBox', '0 -4 8 8')
-      .attr('refX', 8).attr('refY', 0)
-      .attr('markerWidth', 6).attr('markerHeight', 6)
-      .attr('orient', 'auto')
-      .append('path')
-        .attr('d', 'M0,-4L8,0L0,4')
-        .attr('fill', '#4f8ef7')
-        .attr('opacity', 0.8);
 
-    // Add bottleneck arrowhead variant
-    defs.append('marker')
-      .attr('id', 'arrowhead-red')
-      .attr('viewBox', '0 -4 8 8')
-      .attr('refX', 8).attr('refY', 0)
-      .attr('markerWidth', 6).attr('markerHeight', 6)
-      .attr('orient', 'auto')
-      .append('path')
-        .attr('d', 'M0,-4L8,0L0,4')
-        .attr('fill', '#ef4444')
-        .attr('opacity', 0.8);
+    // Closed, compact arrowhead — smaller tip than the default open triangle
+    const makeArrow = (id, color) => {
+      defs.append('marker')
+        .attr('id', id)
+        .attr('viewBox', '0 -3 8 6')
+        .attr('refX', 7).attr('refY', 0)
+        .attr('markerWidth', 4).attr('markerHeight', 4)
+        .attr('orient', 'auto')
+        .attr('markerUnits', 'strokeWidth')
+        .append('path')
+          .attr('d', 'M0,-2.5L7,0L0,2.5Z')
+          .attr('fill', color)
+          .attr('opacity', 0.95);
+    };
+    makeArrow('arrowhead',     '#4f8ef7');
+    makeArrow('arrowhead-red', '#ef4444');
+    makeArrow('arrowhead-amber', '#f59e0b');
+
+    // Soft glow filter applied to every edge path
+    const filter = defs.append('filter')
+      .attr('id', 'edge-glow')
+      .attr('x', '-20%').attr('y', '-40%')
+      .attr('width', '140%').attr('height', '180%');
+    filter.append('feGaussianBlur')
+      .attr('in', 'SourceGraphic')
+      .attr('stdDeviation', '2.5')
+      .attr('result', 'blur');
+    const feMerge = filter.append('feMerge');
+    feMerge.append('feMergeNode').attr('in', 'blur');
+    feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
 
     // Main group — all content goes here for zoom/pan to work
     this.g = this.svg.append('g').attr('class', 'pm-main-group');
@@ -224,94 +233,149 @@ const ProcessMap = {
    * Edge color = how slow this transition is.
    */
   _renderEdges(edges, positions, activityStats) {
-    const maxFreq = Math.max(...edges.map(e => e.frequency));
+    const maxFreq     = Math.max(...edges.map(e => e.frequency));
     const maxDuration = Math.max(...edges.map(e => e.avgDuration));
 
     const edgeGroup = this.g.append('g').attr('class', 'pm-edges');
-
-    const tooltip = document.getElementById('mapTooltip');
+    const tooltip   = document.getElementById('mapTooltip');
 
     for (const edge of edges) {
       const src = positions.get(edge.source);
       const tgt = positions.get(edge.target);
       if (!src || !tgt) continue;
 
-      // Edge endpoints: right-center of source, left-center of target
+      // Edge endpoints: right-center of source → left-center of target
       const x1 = src.x + src.w;
       const y1 = src.y + src.h / 2;
       const x2 = tgt.x;
       const y2 = tgt.y + tgt.h / 2;
 
-      // LEARN: Cubic Bezier curve control points for smooth arcs
-      const cx1 = x1 + (x2 - x1) / 3;
-      const cy1 = y1;
-      const cx2 = x1 + (x2 - x1) * 2 / 3;
-      const cy2 = y2;
+      // LEARN: Pull control points 45 % of the horizontal gap apart
+      // This produces a gentle S-curve even between vertically offset nodes.
+      const gap  = x2 - x1;
+      const pull = Math.max(gap * 0.45, 40);
+      const cx1  = x1 + pull;
+      const cy1  = y1;
+      const cx2  = x2 - pull;
+      const cy2  = y2;
 
       const pathD = `M ${x1} ${y1} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${x2} ${y2}`;
 
-      // Thickness proportional to frequency (1–8px range)
-      const thickness = 1 + (edge.frequency / maxFreq) * 7;
+      // Thickness 1.5 – 7 px (slimmer ceiling than before)
+      const thickness = 1.5 + (edge.frequency / maxFreq) * 5.5;
 
-      // Color: slow transitions are orange/red, fast are blue
-      const slowness = maxDuration > 0 ? edge.avgDuration / maxDuration : 0;
-      const edgeColor = this._interpolateColor('#4f8ef7', '#ef4444', slowness);
+      // Color: blue → amber → red based on transition slowness
+      const slowness     = maxDuration > 0 ? edge.avgDuration / maxDuration : 0;
       const isBottleneck = slowness > 0.6;
+      const isSlowish    = slowness > 0.3;
+      const edgeColor    = isBottleneck
+        ? '#ef4444'
+        : isSlowish
+          ? this._interpolateColor('#f59e0b', '#ef4444', (slowness - 0.3) / 0.3)
+          : this._interpolateColor('#4f8ef7', '#f59e0b', slowness / 0.3);
+      const arrowId = isBottleneck ? 'arrowhead-red'
+                    : isSlowish    ? 'arrowhead-amber'
+                    : 'arrowhead';
 
       const edgeG = edgeGroup.append('g').attr('class', 'pm-edge');
 
-      // Invisible wider path for easier hover
-      edgeG.append('path')
-        .attr('d', pathD)
-        .attr('stroke', 'transparent')
-        .attr('stroke-width', Math.max(thickness + 8, 16))
-        .attr('fill', 'none')
-        .style('cursor', 'pointer')
-        .on('mouseover', (event) => {
-          tooltip.style.display = 'block';
-          tooltip.innerHTML = `
-            <div style="font-weight:600;color:#e8ecf4;margin-bottom:6px;">
-              ${edge.source} → ${edge.target}
-            </div>
-            <div style="color:#8892a4;font-size:0.78rem;">
-              Frequency: <span style="color:#4f8ef7;font-weight:600;">${edge.frequency.toLocaleString()}</span><br/>
-              Avg Duration: <span style="color:${isBottleneck ? '#ef4444' : '#10b981'};font-weight:600;">${edge.avgDuration.toFixed(1)}h</span><br/>
-              P90 Duration: <span style="color:#f59e0b;font-weight:600;">${edge.p90Duration.toFixed(1)}h</span>
-            </div>
-          `;
-          const rect = document.getElementById('processMapSVG').getBoundingClientRect();
-          tooltip.style.left = (event.clientX - rect.left + 10) + 'px';
-          tooltip.style.top  = (event.clientY - rect.top  + 10) + 'px';
-        })
-        .on('mousemove', (event) => {
-          const rect = document.getElementById('processMapSVG').getBoundingClientRect();
-          tooltip.style.left = (event.clientX - rect.left + 10) + 'px';
-          tooltip.style.top  = (event.clientY - rect.top  + 10) + 'px';
-        })
-        .on('mouseout', () => { tooltip.style.display = 'none'; });
-
-      // Visible edge path
+      // ── 1. Glow under-path (blurred duplicate, pointer-events off) ──
       edgeG.append('path')
         .attr('d', pathD)
         .attr('stroke', edgeColor)
-        .attr('stroke-width', thickness)
+        .attr('stroke-width', thickness + 3)
         .attr('fill', 'none')
-        .attr('opacity', 0.75)
-        .attr('marker-end', isBottleneck ? 'url(#arrowhead-red)' : 'url(#arrowhead)')
+        .attr('opacity', 0.18)
+        .attr('filter', 'url(#edge-glow)')
         .style('pointer-events', 'none');
 
-      // Edge label: frequency count
-      const midX = (x1 + x2) / 2;
-      const midY = (y1 + y2) / 2 - 8;
+      // ── 2. Invisible hit target (wide transparent stripe) ──
+      edgeG.append('path')
+        .attr('d', pathD)
+        .attr('stroke', 'transparent')
+        .attr('stroke-width', Math.max(thickness + 10, 18))
+        .attr('fill', 'none')
+        .style('cursor', 'pointer')
+        .on('mouseover', (event) => {
+          // Highlight visible path
+          edgeG.select('.pm-edge-line')
+            .attr('opacity', 1)
+            .attr('stroke-width', thickness + 1.5);
+          tooltip.style.display = 'block';
+          tooltip.innerHTML = `
+            <div style="font-weight:700;color:#e8ecf4;margin-bottom:6px;font-size:0.88rem;">
+              ${edge.source} <span style="color:${edgeColor}">→</span> ${edge.target}
+            </div>
+            <div style="color:#8892a4;font-size:0.78rem;line-height:1.7;">
+              Frequency: <span style="color:#4f8ef7;font-weight:600;">${edge.frequency.toLocaleString()}</span><br/>
+              Avg Duration: <span style="color:${isBottleneck ? '#ef4444' : '#10b981'};font-weight:600;">${edge.avgDuration.toFixed(1)} h</span><br/>
+              P90 Duration: <span style="color:#f59e0b;font-weight:600;">${edge.p90Duration.toFixed(1)} h</span>
+              ${isBottleneck ? '<br/><span style="color:#ef4444;font-weight:700;">⚠ Bottleneck transition</span>' : ''}
+            </div>
+          `;
+          const rect = document.getElementById('processMapSVG').getBoundingClientRect();
+          tooltip.style.left = (event.clientX - rect.left + 14) + 'px';
+          tooltip.style.top  = (event.clientY - rect.top  + 14) + 'px';
+        })
+        .on('mousemove', (event) => {
+          const rect = document.getElementById('processMapSVG').getBoundingClientRect();
+          tooltip.style.left = (event.clientX - rect.left + 14) + 'px';
+          tooltip.style.top  = (event.clientY - rect.top  + 14) + 'px';
+        })
+        .on('mouseout', () => {
+          edgeG.select('.pm-edge-line')
+            .attr('opacity', 0.82)
+            .attr('stroke-width', thickness);
+          tooltip.style.display = 'none';
+        });
 
-      edgeG.append('text')
-        .attr('x', midX).attr('y', midY)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', '10px')
-        .attr('fill', edgeColor)
-        .attr('opacity', 0.8)
+      // ── 3. Visible edge path ──
+      edgeG.append('path')
+        .attr('class', 'pm-edge-line')
+        .attr('d', pathD)
+        .attr('stroke', edgeColor)
+        .attr('stroke-width', thickness)
+        .attr('stroke-linecap', 'round')
+        .attr('fill', 'none')
+        .attr('opacity', 0.82)
+        .attr('marker-end', `url(#${arrowId})`)
         .style('pointer-events', 'none')
-        .text(edge.frequency.toLocaleString());
+        .style('transition', 'opacity 0.15s, stroke-width 0.15s');
+
+      // ── 4. Pill frequency badge at the curve midpoint ──
+      // Compute the actual midpoint on the cubic Bezier at t=0.5
+      const t  = 0.5;
+      const mt = 1 - t;
+      const bx = mt*mt*mt*x1 + 3*mt*mt*t*cx1 + 3*mt*t*t*cx2 + t*t*t*x2;
+      const by = mt*mt*mt*y1 + 3*mt*mt*t*cy1 + 3*mt*t*t*cy2 + t*t*t*y2;
+
+      const labelText = edge.frequency >= 1000
+        ? (edge.frequency / 1000).toFixed(1) + 'k'
+        : edge.frequency.toString();
+      const pillW = labelText.length * 5.5 + 12;
+      const pillH = 14;
+
+      const labelG = edgeG.append('g')
+        .style('pointer-events', 'none')
+        .attr('opacity', 0.92);
+
+      labelG.append('rect')
+        .attr('x', bx - pillW / 2).attr('y', by - pillH / 2 - 2)
+        .attr('width', pillW).attr('height', pillH)
+        .attr('rx', 5).attr('ry', 5)
+        .attr('fill', '#0d1117')
+        .attr('stroke', edgeColor)
+        .attr('stroke-width', 0.8)
+        .attr('opacity', 0.82);
+
+      labelG.append('text')
+        .attr('x', bx).attr('y', by + 3)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', '9px')
+        .attr('font-family', "'JetBrains Mono', monospace")
+        .attr('font-weight', '600')
+        .attr('fill', edgeColor)
+        .text(labelText);
     }
   },
 
