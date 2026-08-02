@@ -48,26 +48,8 @@ const ProcessMap = {
 
     this.svg = d3.select('#processMapSVG');
 
-    // LEARN: Define an arrowhead marker — reused by all edges
+    // LEARN: Define SVG defs — filters only (arrowheads removed)
     const defs = this.svg.append('defs');
-
-    // Closed, compact arrowhead — smaller tip than the default open triangle
-    const makeArrow = (id, color) => {
-      defs.append('marker')
-        .attr('id', id)
-        .attr('viewBox', '0 -3 8 6')
-        .attr('refX', 7).attr('refY', 0)
-        .attr('markerWidth', 4).attr('markerHeight', 4)
-        .attr('orient', 'auto')
-        .attr('markerUnits', 'strokeWidth')
-        .append('path')
-          .attr('d', 'M0,-2.5L7,0L0,2.5Z')
-          .attr('fill', color)
-          .attr('opacity', 0.95);
-    };
-    makeArrow('arrowhead',     '#4f8ef7');
-    makeArrow('arrowhead-red', '#ef4444');
-    makeArrow('arrowhead-amber', '#f59e0b');
 
     // Soft glow filter applied to every edge path
     const filter = defs.append('filter')
@@ -81,6 +63,7 @@ const ProcessMap = {
     const feMerge = filter.append('feMerge');
     feMerge.append('feMergeNode').attr('in', 'blur');
     feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+
 
     // Main group — all content goes here for zoom/pan to work
     this.g = this.svg.append('g').attr('class', 'pm-main-group');
@@ -199,21 +182,22 @@ const ProcessMap = {
     }
 
     const numLayers = Math.max(...layerGroups.keys()) + 1;
-    const padding = { x: 80, y: 60 };
+    const padding = { x: 100, y: 80 };
     const nodeW = 160, nodeH = 48;
+    const nodeGapY = 58;  // vertical gap between nodes in the same column
 
     // LEARN: Spacing formula — evenly distribute across available width
-    const layerSpacing = Math.max(200, (width - padding.x * 2) / Math.max(1, numLayers - 1));
+    const layerSpacing = Math.max(260, (width - padding.x * 2) / Math.max(1, numLayers - 1));
 
     for (const [layer, nodeNames] of layerGroups) {
       const nodesInLayer = nodeNames.length;
-      const totalHeight = nodesInLayer * (nodeH + 20) - 20;
-      const startY = (height - totalHeight) / 2;
+      const totalHeight = nodesInLayer * (nodeH + nodeGapY) - nodeGapY;
+      const startY = Math.max(padding.y, (height - totalHeight) / 2);
 
       nodeNames.forEach((name, idx) => {
         positions.set(name, {
           x: padding.x + layer * layerSpacing,
-          y: startY + idx * (nodeH + 20),
+          y: startY + idx * (nodeH + nodeGapY),
           w: nodeW,
           h: nodeH,
           layer,
@@ -329,7 +313,7 @@ const ProcessMap = {
           tooltip.style.display = 'none';
         });
 
-      // ── 3. Visible edge path ──
+      // ── 3. Visible edge path (no arrowhead) ──
       edgeG.append('path')
         .attr('class', 'pm-edge-line')
         .attr('d', pathD)
@@ -338,7 +322,6 @@ const ProcessMap = {
         .attr('stroke-linecap', 'round')
         .attr('fill', 'none')
         .attr('opacity', 0.82)
-        .attr('marker-end', `url(#${arrowId})`)
         .style('pointer-events', 'none')
         .style('transition', 'opacity 0.15s, stroke-width 0.15s');
 
