@@ -22,6 +22,8 @@ const State = {
   currentView: 'upload',
   charts: {},           // Stores Chart.js instances (to destroy before re-rendering)
   stats: null,          // Cached ProcessEngine.stats
+  rawEvents: [],        // Full unfiltered event log (used to re-slice on filter change)
+  activeFilter: 'all',  // 'all' | '30d' | '7d'
   counterRAFs: {},      // perf: tracks active requestAnimationFrame IDs per element
   lastCaseSort: null,   // perf: memoize last sort key to skip redundant re-renders
 };
@@ -69,6 +71,21 @@ function initNavigation() {
 
   // Top-bar "Load Sample Data" button
   document.getElementById('loadSampleBtn')?.addEventListener('click', loadSampleData);
+
+  // ── Time-filter buttons (All Time / 30 Days / 7 Days) ──
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!State.dataLoaded) return;          // ignore clicks before data is loaded
+      const filter = btn.dataset.filter;      // 'all' | '30d' | '7d'
+      if (filter === State.activeFilter) return; // already active — no-op
+
+      // Update active button style
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      applyTimeFilter(filter);
+    });
+  });
 }
 
 /**
@@ -139,6 +156,78 @@ function renderCurrentView(viewName) {
 }
 
 // ============================================================
+// TIME FILTER
+// ============================================================
+/**
+ * applyTimeFilter(filter)
+ *
+ * Slices the full raw event log to the requested time window,
+ * re-runs ProcessEngine.load() on the slice, then refreshes
+ * the current view so all charts/KPIs reflect the filtered data.
+ *
+ * @param {string} filter  'all' | '30d' | '7d'
+ */
+function applyTimeFilter(filter) {
+  State.activeFilter = filter;
+
+  let filteredEvents = State.rawEvents;
+
+  if (filter !== 'all') {
+    const days   = filter === '30d' ? 30 : 7;
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - days);
+
+    // Find the latest timestamp in the dataset so relative filtering
+    // works even on historical sample data (not just "today" data)
+    const maxTs = State.rawEvents.reduce((max, e) =>
+      e.timestamp > max ? e.timestamp : max, new Date(0));
+
+    const adjustedCutoff = new Date(maxTs);
+    adjustedCutoff.setDate(adjustedCutoff.getDate() - days);
+
+    // Keep only events from cases that started on or after the cutoff
+    // First find qualifying case IDs (cases whose first event >= cutoff)
+    const qualifyingCases = new Set();
+    const firstEventByCase = new Map();
+    for (const ev of State.rawEvents) {
+      const ts = new Date(ev.timestamp);
+      if (!firstEventByCase.has(ev.case_id) || ts < firstEventByCase.get(ev.case_id)) {
+        firstEventByCase.set(ev.case_id, ts);
+      }
+    }
+    for (const [caseId, firstTs] of firstEventByCase) {
+      if (firstTs >= adjustedCutoff) qualifyingCases.add(caseId);
+    }
+
+    filteredEvents = State.rawEvents.filter(e => qualifyingCases.has(e.case_id));
+  }
+
+  if (filteredEvents.length === 0) {
+    alert(`No cases found in the last ${filter === '30d' ? '30' : '7'} days of this dataset.`);
+    // Revert button to previous active filter
+    document.querySelectorAll('.filter-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.filter === State.activeFilter));
+    State.activeFilter = filter === '30d' ? '7d' : 'all'; // revert
+    return;
+  }
+
+  // Re-run analytics on the filtered slice
+  const stats = ProcessEngine.load(filteredEvents);
+  State.stats = stats;
+
+  // Update sidebar case count
+  document.querySelector('.data-status span').textContent =
+    `${stats.totalCases.toLocaleString()} cases${filter !== 'all' ? ` (${filter})` : ''}`;
+
+  // Re-render the active view with new data
+  // Force re-render by clearing currentView guard
+  const view = State.currentView;
+  State.currentView = null;
+  renderCurrentView(view);
+  State.currentView = view;
+}
+
+// ============================================================
 // DATA LOADING
 // ============================================================
 
@@ -174,6 +263,12 @@ async function loadSampleData() {
 
     State.stats = stats;
     State.dataLoaded = true;
+    State.rawEvents  = events;   // store full log for time-filter slicing
+    State.activeFilter = 'all';
+
+    // Reset filter buttons to "All Time"
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.filter-btn[data-filter="all"]')?.classList.add('active');
 
     // Update sidebar status indicator
     document.querySelector('.status-dot').className = 'status-dot active';
@@ -244,6 +339,12 @@ async function processCSVFile(file) {
 
     State.stats = stats;
     State.dataLoaded = true;
+    State.rawEvents  = events;   // store full log for time-filter slicing
+    State.activeFilter = 'all';
+
+    // Reset filter buttons to "All Time"
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.filter-btn[data-filter="all"]')?.classList.add('active');
 
     document.querySelector('.status-dot').className = 'status-dot active';
     document.querySelector('.data-status span').textContent =
