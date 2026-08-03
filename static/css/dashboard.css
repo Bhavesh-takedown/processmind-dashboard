@@ -77,7 +77,7 @@
   /* Warm paper base — avoids the harsh clinic-white look */
   --bg-primary:     #f6f4ff;   /* Warm lavender-white */
   --bg-secondary:   #ede9fb;   /* Soft violet-grey sidebar */
-  --bg-card:        #ffffff;   /* Pure white cards with coloured shadows */
+  --bg-card:        #faf8ff;   /* Soft lavender-white cards */
   --bg-hover:       #e8e3f8;   /* Gentle violet hover */
   --bg-active:      #d8d0f4;   /* Active / selected state */
 
