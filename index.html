@@ -600,6 +600,54 @@
   border-color: rgba(245,158,11,0.5);
   transform: scale(1.1) rotate(15deg);
 }
+
+/* ── Shortcuts (?) Button ─────────────────────────────────────── */
+.shortcuts-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s, color 0.2s;
+  flex-shrink: 0;
+  margin-left: 4px;
+  line-height: 1;
+  user-select: none;
+}
+.shortcuts-btn:hover {
+  background: rgba(79,142,247,0.15);
+  border-color: rgba(79,142,247,0.45);
+  color: var(--accent-blue);
+  transform: scale(1.1);
+}
+
+/* ── Light-mode: make both topbar icon buttons clearly visible ── */
+[data-theme="light"] .theme-toggle-btn,
+[data-theme="light"] .shortcuts-btn {
+  background: rgba(67,97,238,0.09);
+  border-color: rgba(67,97,238,0.30);
+  color: #4b4578;
+  box-shadow: 0 2px 8px rgba(67,97,238,0.12);
+}
+[data-theme="light"] .theme-toggle-btn:hover {
+  background: rgba(245,158,11,0.14);
+  border-color: rgba(245,158,11,0.50);
+  box-shadow: 0 4px 12px rgba(245,158,11,0.18);
+}
+[data-theme="light"] .shortcuts-btn:hover {
+  background: rgba(67,97,238,0.18);
+  border-color: rgba(67,97,238,0.55);
+  color: #4361ee;
+  box-shadow: 0 4px 12px rgba(67,97,238,0.18);
+}
 </style>
 
 
