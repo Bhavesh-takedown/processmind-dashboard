@@ -97,3 +97,4 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 - `DataGenerator.generateEventLog()` — synthetic Order-to-Cash event log
   (500 cases, 5 variants, Box-Muller distributed durations)
 - Pure frontend — 100% client-side, zero backend required
+Last updated: 2026-08-05 19:20:52
