@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProcessMind — Business Process Analytics</title>
+  <meta name="description" content="Business process analytics dashboard powered by process mining — discover bottlenecks, analyze flows, and optimize your business processes." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="static/css/dashboard.css" />
+</head>
+<body>
+
+<!-- ============================================================
+     SIDEBAR NAVIGATION
+     The sidebar holds logo + nav links for each section.
+============================================================ -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">⚡</div>
+    <span class="logo-text">ProcessMind</span>
+  </div>
+
+  <div class="sidebar-section-label">ANALYTICS</div>
+  <a href="#" class="nav-item active" data-view="overview" id="nav-overview">
+    <span class="nav-icon">&#x1F4CA;</span>
+    <span>Overview</span>
+  </a>
+  <a href="#" class="nav-item" data-view="process-map" id="nav-process-map">
+    <span class="nav-icon">&#x1F5FA;&#xFE0F;</span>
+    <span>Process Map</span>
+  </a>
+  <a href="#" class="nav-item" data-view="bottlenecks" id="nav-bottlenecks">
+    <span class="nav-icon">&#x1F6A8;</span>
+    <span>Bottlenecks</span>
+  </a>
+  <a href="#" class="nav-item" data-view="cases" id="nav-cases">
+    <span class="nav-icon">&#x1F4CB;</span>
+    <span>Case Explorer</span>
+  </a>
+  <a href="#" class="nav-item" data-view="resources" id="nav-resources">
+    <span class="nav-icon">&#x1F465;</span>
+    <span>Resources</span>
+  </a>
+  <a href="#" class="nav-item" data-view="anomalies" id="nav-anomalies">
+    <span class="nav-icon">&#x26A0;&#xFE0F;</span>
+    <span>Anomalies</span>
+  </a>
+
+  <div class="sidebar-section-label" style="margin-top:24px;">DATA &amp; SQL</div>
+  <a href="#" class="nav-item" data-view="upload" id="nav-upload">
+    <span class="nav-icon">&#x1F4C2;</span>
+    <span>Load Event Log</span>
+  </a>
+  <a href="#" class="nav-item" data-view="sql-explorer" id="nav-sql-explorer">
+    <span class="nav-icon">&#x1F5C4;&#xFE0F;</span>
+    <span>SQL Explorer</span>
+  </a>
+
+  <div class="sidebar-footer">
+    <div class="data-status" id="dataStatus">
+      <div class="status-dot inactive"></div>
+      <span>No data loaded</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================================
+     MAIN CONTENT AREA
+============================================================ -->
+<main class="main-content">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1 class="page-title" id="pageTitle">Overview</h1>
+      <span class="page-subtitle" id="pageSubtitle">Business Process Analytics Dashboard</span>
+    </div>
+    <div class="topbar-right">
+      <div class="time-filter">
+        <button class="filter-btn active" data-filter="all">All Time</button>
+        <button class="filter-btn" data-filter="30d">30 Days</button>
+      </div>
+      <button class="btn-primary" id="loadSampleBtn">
+        ✨ Load Sample Data
+      </button>
+      <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle dark / light theme (T)" aria-label="Toggle colour theme">🌙</button>
+      <button class="shortcuts-btn" id="shortcutsBtn" title="Keyboard shortcuts (?)" aria-label="Show keyboard shortcuts">?</button>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       VIEW: UPLOAD / LOAD DATA
+  ============================================================ -->
+  <section class="view active" id="view-upload">
+    <div class="upload-hero">
+      <div class="upload-card">
+        <div class="upload-icon">📂</div>
+        <h2>Load Your Event Log</h2>
+        <p>Upload a CSV file with columns: <code>case_id</code>, <code>activity</code>, <code>timestamp</code> (and optionally <code>resource</code>, <code>cost</code>)</p>
+        <div class="upload-zone" id="uploadZone">
+          <div class="upload-zone-inner">
+            <span class="upload-zone-icon">⬆️</span>
+            <p>Drag & drop your CSV here or <label for="fileInput" class="upload-link">browse files</label></p>
+            <input type="file" id="fileInput" accept=".csv" style="display:none" />
+            <p class="upload-note">CSV format: case_id, activity, timestamp[, resource, cost]</p>
+          </div>
+        </div>
+        <div class="divider-or"><span>or</span></div>
+        <button class="btn-primary btn-large" id="loadSampleBtn2">
+          &#x1F680; Load Sample Sales Order Data
+        </button>
+        <p class="sample-desc">10,000 cases &bull; Order-to-Cash process &bull; SQLite in-browser &bull; Z-score anomaly detection</p>
+      </div>
+
+      <div class="upload-info">
+        <h3>📖 What is an Event Log?</h3>
+        <div class="info-box">
+          <p>An event log records <strong>every action</strong> taken during a business process. Each row = one event.</p>
+          <table class="sample-table">
+            <thead><tr><th>case_id</th><th>activity</th><th>timestamp</th><th>resource</th></tr></thead>
+            <tbody>
+              <tr><td>ORD-001</td><td>Order Received</td><td>2024-01-01 09:00</td><td>Sales</td></tr>
+              <tr><td>ORD-001</td><td>Credit Check</td><td>2024-01-01 14:30</td><td>Finance</td></tr>
+              <tr><td>ORD-001</td><td>Approved</td><td>2024-01-02 10:00</td><td>Manager</td></tr>
+              <tr><td>ORD-001</td><td>Shipped</td><td>2024-01-03 08:00</td><td>Warehouse</td></tr>
+              <tr><td>ORD-002</td><td>Order Received</td><td>2024-01-01 11:00</td><td>Sales</td></tr>
+              <tr><td>ORD-002</td><td>Credit Check</td><td>2024-01-03 09:00</td><td>Finance</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-steps">
+          <div class="info-step">
+            <div class="step-num">1</div>
+            <div><strong>Load</strong> your event log CSV</div>
+          </div>
+          <div class="info-step">
+            <div class="step-num">2</div>
+            <div><strong>Discover</strong> actual process flows automatically</div>
+          </div>
+          <div class="info-step">
+            <div class="step-num">3</div>
+            <div><strong>Find</strong> bottlenecks & inefficiencies</div>
+          </div>
+          <div class="info-step">
+            <div class="step-num">4</div>
+            <div><strong>Optimize</strong> your business process</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW: OVERVIEW - KPI CARDS + SUMMARY CHARTS
+  ============================================================ -->
+  <section class="view" id="view-overview">
+    <div class="kpi-grid" id="kpiGrid">
+      <div class="kpi-card" id="kpi-cases">
+        <div class="kpi-icon">📦</div>
+        <div class="kpi-content">
+          <div class="kpi-value" id="kpiTotalCases">—</div>
+          <div class="kpi-label">Total Cases</div>
+          <div class="kpi-trend positive" id="kpiCasesTrend"></div>
+        </div>
+      </div>
+      <div class="kpi-card" id="kpi-events">
+        <div class="kpi-icon">⚡</div>
+        <div class="kpi-content">
+          <div class="kpi-value" id="kpiTotalEvents">—</div>
+          <div class="kpi-label">Total Events</div>
+        </div>
+      </div>
+      <div class="kpi-card" id="kpi-duration">
+        <div class="kpi-icon">⏱️</div>
+        <div class="kpi-content">
+          <div class="kpi-value" id="kpiAvgDuration">—</div>
+          <div class="kpi-label">Avg Case Duration</div>
+        </div>
+      </div>
+      <div class="kpi-card" id="kpi-activities">
+        <div class="kpi-icon">🔀</div>
+        <div class="kpi-content">
+          <div class="kpi-value" id="kpiActivities">—</div>
+          <div class="kpi-label">Unique Activities</div>
+        </div>
+      </div>
+      <div class="kpi-card" id="kpi-bottleneck">
+        <div class="kpi-icon">🚨</div>
+        <div class="kpi-content">
+          <div class="kpi-value" id="kpiBottleneckActivity">—</div>
+          <div class="kpi-label">Top Bottleneck</div>
+        </div>
+      </div>
+      <div class="kpi-card" id="kpi-variants">
+        <div class="kpi-icon">🌿</div>
+        <div class="kpi-content">
+          <div class="kpi-value" id="kpiVariants">—</div>
+          <div class="kpi-label">Process Variants</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <h3>📈 Cases Over Time</h3>
+          <span class="chart-subtitle">Event volume by day</span>
+        </div>
+        <div class="chart-canvas-wrap"><canvas id="chartCasesOverTime"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>🔄 Activity Frequency</h3>
+          <span class="chart-subtitle">Most common steps</span>
+        </div>
+        <div class="chart-canvas-wrap"><canvas id="chartActivityFreq"></canvas></div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>⏳ Duration Distribution</h3>
+          <span class="chart-subtitle">Case completion times</span>
+        </div>
+        <div class="chart-canvas-wrap"><canvas id="chartDurationDist"></canvas></div>
+      </div>
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <h3>🕐 Avg Wait Time per Activity</h3>
+          <span class="chart-subtitle">Hours waiting at each step — higher = bottleneck</span>
+        </div>
+        <div class="chart-canvas-wrap"><canvas id="chartWaitTime"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW: PROCESS MAP - THE HEART OF PROCESS MINING
+  ============================================================ -->
+  <section class="view" id="view-process-map">
+    <div class="process-map-toolbar">
+      <div class="toolbar-group">
+        <label>Min Edge Frequency:</label>
+        <input type="range" id="edgeFreqSlider" min="1" max="100" value="1" />
+        <span id="edgeFreqValue">1</span>
+      </div>
+      <div class="toolbar-group">
+        <label>Color by:</label>
+        <select id="colorBySelect">
+          <option value="frequency">Frequency</option>
+          <option value="duration">Avg Duration</option>
+        </select>
+      </div>
+      <div class="toolbar-group">
+        <button class="btn-secondary" id="resetMapBtn">🔄 Reset View</button>
+        <button class="btn-secondary" id="fitMapBtn">⊡ Fit View</button>
+      </div>
+      <div class="toolbar-group">
+        <span class="legend-item"><span class="legend-dot green"></span> Start/End</span>
+        <span class="legend-item"><span class="legend-dot orange"></span> High Traffic</span>
+        <span class="legend-item"><span class="legend-dot red"></span> Bottleneck</span>
+      </div>
+    </div>
+
+    <div class="process-map-container">
+      <svg id="processMapSVG"></svg>
+      <div class="map-tooltip" id="mapTooltip" style="display:none;"></div>
+    </div>
+
+    <div class="process-map-stats">
+      <div class="stat-pill" id="mapStatVariants">—</div>
+      <div class="stat-pill" id="mapStatEdges">—</div>
+      <div class="stat-pill" id="mapStatHappyPath">—</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW: BOTTLENECKS - WHERE PROCESS SLOWS DOWN
+  ============================================================ -->
+  <section class="view" id="view-bottlenecks">
+    <div class="section-intro">
+      <h2>🚨 Bottleneck Analysis</h2>
+      <p>These are the steps where cases spend the most time <em>waiting</em>. Fixing these gives you the biggest ROI.</p>
+    </div>
+
+    <div class="bottleneck-grid" id="bottleneckGrid">
+      <!-- Dynamically populated -->
+    </div>
+
+    <div class="charts-row" style="margin-top:24px;">
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <h3>⏱️ Transition Duration Heatmap</h3>
+          <span class="chart-subtitle">Avg hours between activity pairs — dark = slow</span>
+        </div>
+        <div id="heatmapContainer" style="overflow:auto;"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>📊 Rework Detection</h3>
+          <span class="chart-subtitle">Activities that repeat within a case</span>
+        </div>
+        <div class="chart-canvas-wrap"><canvas id="chartRework"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW: CASE EXPLORER - DRILL DOWN INTO INDIVIDUAL CASES
+  ============================================================ -->
+  <section class="view" id="view-cases">
+    <div class="case-explorer-layout">
+      <div class="case-list-panel">
+        <div class="panel-header">
+          <h3>Cases</h3>
+          <input type="text" class="search-input" id="caseSearch" placeholder="Search case ID..." />
+        </div>
+        <div class="case-sort-bar">
+          <button class="sort-btn active" data-sort="duration-desc">⬇ Slowest</button>
+          <button class="sort-btn" data-sort="duration-asc">⬆ Fastest</button>
+          <button class="sort-btn" data-sort="events-desc">📋 Most Steps</button>
+        </div>
+        <div class="case-list" id="caseList">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <div class="case-detail-panel" id="caseDetailPanel">
+        <div class="case-detail-placeholder">
+          <div class="placeholder-icon">👈</div>
+          <p>Select a case from the list to view its full timeline</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW: RESOURCES - WHO IS DOING WHAT
+  ============================================================ -->
+  <section class="view" id="view-resources">
+    <div class="section-intro">
+      <h2>👥 Resource Analysis</h2>
+      <p>Understand workload distribution across your team and identify overloaded resources.</p>
+    </div>
+
+    <div class="resource-grid" id="resourceGrid">
+      <!-- Populated dynamically -->
+    </div>
+
+    <div class="charts-row" style="margin-top:24px;">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>📊 Events per Resource</h3>
+        </div>
+        <div class="chart-canvas-wrap"><canvas id="chartResourceLoad"></canvas></div>
+      </div>
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <h3>🕐 Resource Activity Matrix</h3>
+          <span class="chart-subtitle">Which resource handles which activities</span>
+        </div>
+        <div id="resourceMatrixContainer"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW: ANOMALIES - CYCLE TIME ANOMALY DETECTION
+  ============================================================ -->
+  <section class="view" id="view-anomalies">
+    <div class="section-intro">
+      <h2>&#x26A0;&#xFE0F; Cycle-Time Anomaly Detection</h2>
+      <p>Cases flagged as statistical outliers using <strong>Z-score analysis</strong> on the SQLite data. Cases with |Z| &gt; 2 deviate significantly from the mean cycle time.</p>
+      <div class="sql-badge">SQL: WITH case_dur AS (...) SELECT case_id, (duration - mean) / stddev AS z_score FROM ... WHERE ABS(z_score) &gt; 2</div>
+    </div>
+
+    <div class="anomaly-summary-bar" id="anomalySummary"></div>
+
+    <div class="anomaly-list" id="anomalyList">
+      <!-- Populated by renderAnomalies() -->
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW: SQL EXPLORER - LIVE QUERY RUNNER
+  ============================================================ -->
+  <section class="view" id="view-sql-explorer">
+    <div class="section-intro">
+      <h2>&#x1F5C4;&#xFE0F; SQL Explorer</h2>
+      <p>Run live SQL queries against the <code>event_log</code> table (SQLite via sql.js WebAssembly). These are the same queries that power the dashboard.</p>
+    </div>
+
+    <div class="sql-explorer-layout">
+      <div class="sql-editor-panel">
+        <div class="sql-examples">
+          <span class="sql-examples-label">Quick examples:</span>
+          <button class="sql-example-btn" data-sql="SELECT COUNT(*) AS total_events, COUNT(DISTINCT case_id) AS total_cases FROM event_log;">Row Count</button>
+          <button class="sql-example-btn" data-sql="SELECT activity, COUNT(*) AS frequency, ROUND(AVG(cost),2) AS avg_cost&#10;FROM event_log&#10;GROUP BY activity&#10;ORDER BY frequency DESC;">Activity Stats</button>
+          <button class="sql-example-btn" data-sql="WITH ordered AS (&#10;  SELECT case_id, activity, timestamp,&#10;  LAG(timestamp) OVER (PARTITION BY case_id ORDER BY timestamp) AS prev_ts&#10;  FROM event_log&#10;)&#10;SELECT activity,&#10;  ROUND(AVG(CASE WHEN prev_ts IS NOT NULL&#10;    THEN (julianday(timestamp)-julianday(prev_ts))*24 ELSE 0 END),2) AS avg_wait_hours&#10;FROM ordered&#10;GROUP BY activity&#10;ORDER BY avg_wait_hours DESC;">Bottleneck Query (LAG)</button>
+          <button class="sql-example-btn" data-sql="SELECT resource, dept, COUNT(*) AS events, ROUND(SUM(cost),2) AS total_cost&#10;FROM event_log&#10;GROUP BY resource, dept&#10;ORDER BY events DESC&#10;LIMIT 10;">Resource Workload</button>
+          <button class="sql-example-btn" data-sql="WITH case_dur AS (&#10;  SELECT case_id,&#10;    (julianday(MAX(timestamp))-julianday(MIN(timestamp)))*24 AS dur&#10;  FROM event_log GROUP BY case_id&#10;),&#10;stats AS (&#10;  SELECT AVG(dur) AS mean,&#10;    SQRT(MAX(AVG(dur*dur)-AVG(dur)*AVG(dur),0)) AS stddev&#10;  FROM case_dur&#10;)&#10;SELECT cd.case_id, ROUND(cd.dur,1) AS duration_hours,&#10;  ROUND((cd.dur-s.mean)/MAX(1,s.stddev),2) AS z_score&#10;FROM case_dur cd, stats s&#10;WHERE ABS(cd.dur-s.mean) &gt; 2*s.stddev&#10;ORDER BY ABS(z_score) DESC LIMIT 20;">Z-Score Anomalies</button>
+          <button class="sql-example-btn" data-sql="SELECT substr(timestamp,1,10) AS day, COUNT(*) AS events&#10;FROM event_log&#10;GROUP BY substr(timestamp,1,10)&#10;ORDER BY day;">Events Per Day</button>
+        </div>
+
+        <div class="sql-schema-info">
+          <span class="sql-schema-label">Table: <code>event_log</code></span>
+          <span class="sql-col">id</span><span class="sql-col">case_id</span><span class="sql-col">activity</span>
+          <span class="sql-col">timestamp</span><span class="sql-col">resource</span><span class="sql-col">dept</span>
+          <span class="sql-col">cost</span><span class="sql-col">variant</span>
+        </div>
+
+        <textarea id="sqlInput" class="sql-textarea" spellcheck="false"
+          placeholder="Type SQL here... (Ctrl+Enter to run)&#10;&#10;Example:&#10;SELECT activity, COUNT(*) as freq&#10;FROM event_log&#10;GROUP BY activity&#10;ORDER BY freq DESC;"
+        ></textarea>
+
+        <div class="sql-editor-footer">
+          <button class="btn-primary" id="sqlRunBtn">&#x25B6; Run Query &nbsp;<kbd>Ctrl+Enter</kbd></button>
+          <span class="sql-hint">Connected to: SQLite 3 (sql.js WASM) &bull; Table: event_log</span>
+        </div>
+      </div>
+
+      <div class="sql-results-panel" id="sqlResults">
+        <div class="sql-placeholder">
+          <div style="font-size:2rem;">&#x1F5C4;&#xFE0F;</div>
+          <p>Run a query to see results here</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loadingOverlay" style="display:none;">
+  <div class="loading-card">
+    <div class="loading-spinner"></div>
+    <p id="loadingMsg">Analyzing process data...</p>
+    <div class="loading-steps" id="loadingSteps"></div>
+  </div>
+</div>
+
+<!-- Tooltip for charts -->
+<div class="global-tooltip" id="globalTooltip" style="display:none;"></div>
+
+<!-- ============================================================
+     KEYBOARD SHORTCUTS MODAL
+     Triggered by pressing "?" or clicking the ? button in the topbar.
+     Closed by pressing Escape or clicking the backdrop.
+============================================================ -->
+<div class="shortcuts-backdrop" id="shortcutsBackdrop" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle" style="display:none;">
+  <div class="shortcuts-modal">
+    <div class="shortcuts-header">
+      <h2 id="shortcutsTitle">⌨️ Keyboard Shortcuts</h2>
+      <button class="shortcuts-close" id="shortcutsClose" aria-label="Close shortcuts">&times;</button>
+    </div>
+    <div class="shortcuts-body">
+      <div class="shortcuts-group">
+        <h3>Navigation</h3>
+        <div class="shortcut-row"><kbd>1</kbd><span>Overview</span></div>
+        <div class="shortcut-row"><kbd>2</kbd><span>Process Map</span></div>
+        <div class="shortcut-row"><kbd>3</kbd><span>Bottlenecks</span></div>
+        <div class="shortcut-row"><kbd>4</kbd><span>Case Explorer</span></div>
+        <div class="shortcut-row"><kbd>5</kbd><span>Resources</span></div>
+        <div class="shortcut-row"><kbd>U</kbd><span>Load Event Log</span></div>
+      </div>
+      <div class="shortcuts-group">
+        <h3>Actions</h3>
+        <div class="shortcut-row"><kbd>S</kbd><span>Load sample data</span></div>
+        <div class="shortcut-row"><kbd>T</kbd><span>Toggle dark / light theme</span></div>
+        <div class="shortcut-row"><kbd>?</kbd><span>Toggle this panel</span></div>
+        <div class="shortcut-row"><kbd>Esc</kbd><span>Close this panel</span></div>
+      </div>
+    </div>
+    <p class="shortcuts-footer">Tip: shortcuts are disabled while typing in an input field.</p>
+  </div>
+</div>
+
+<style>
+/* ── Shortcuts button ─────────────────────────────────────────── */
+.shortcuts-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.65);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+  flex-shrink: 0;
+  margin-left: 8px;
+  line-height: 1;
+  font-family: inherit;
+}
+.shortcuts-btn:hover {
+  background: rgba(99,102,241,0.25);
+  border-color: rgba(99,102,241,0.55);
+  color: #a5b4fc;
+  transform: scale(1.1);
+}
+
+/* ── Modal backdrop ───────────────────────────────────────────── */
+.shortcuts-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(4px);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInBackdrop 0.18s ease;
+}
+@keyframes fadeInBackdrop { from { opacity:0; } to { opacity:1; } }
+
+/* ── Modal card ───────────────────────────────────────────────── */
+.shortcuts-modal {
+  background: #1e1e2e;
+  border: 1px solid rgba(99,102,241,0.3);
+  border-radius: 16px;
+  padding: 28px 32px;
+  width: min(480px, 90vw);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(99,102,241,0.12);
+  animation: slideUpModal 0.22s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes slideUpModal {
+  from { opacity:0; transform: translateY(24px) scale(0.97); }
+  to   { opacity:1; transform: translateY(0)    scale(1); }
+}
+
+/* ── Modal header ─────────────────────────────────────────────── */
+.shortcuts-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+.shortcuts-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin: 0;
+}
+.shortcuts-close {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.4);
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+.shortcuts-close:hover { color:#e2e8f0; background: rgba(255,255,255,0.08); }
+
+/* ── Shortcut groups & rows ───────────────────────────────────── */
+.shortcuts-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 32px;
+}
+.shortcuts-group h3 {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(165,180,252,0.7);
+  margin: 0 0 10px;
+}
+.shortcut-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.shortcut-row:last-child { border-bottom: none; }
+.shortcut-row kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 24px;
+  padding: 0 6px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: #a5b4fc;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.shortcut-row span {
+  font-size: 13px;
+  color: rgba(226,232,240,0.75);
+}
+
+/* ── Footer note ──────────────────────────────────────────────── */
+.shortcuts-footer {
+  margin: 20px 0 0;
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.3);
+  text-align: center;
+  font-style: italic;
+}
+
+/* ── Copy Timeline Button ─────────────────────────────────────── */
+.copy-timeline-btn {
+  margin-left: auto;
+  flex-shrink: 0;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.05);
+  color: rgba(226,232,240,0.7);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.12s;
+  white-space: nowrap;
+}
+.copy-timeline-btn:hover {
+  background: rgba(79,142,247,0.18);
+  border-color: rgba(79,142,247,0.5);
+  color: #a5b4fc;
+  transform: translateY(-1px);
+}
+.copy-timeline-btn.copied {
+  background: rgba(16,185,129,0.2);
+  border-color: rgba(16,185,129,0.5);
+  color: #6ee7b7;
+}
+
+/* ── Toast slide-in animation ─────────────────────────────────── */
+@keyframes slideInToast {
+  from { opacity: 0; transform: translateY(12px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* ── Theme Toggle Button ──────────────────────────────────────── */
+.theme-toggle-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  flex-shrink: 0;
+  margin-left: 8px;
+  line-height: 1;
+  user-select: none;
+}
+.theme-toggle-btn:hover {
+  background: rgba(245,158,11,0.2);
+  border-color: rgba(245,158,11,0.5);
+  transform: scale(1.1) rotate(15deg);
+}
+
+/* ── Shortcuts (?) Button ─────────────────────────────────────── */
+.shortcuts-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s, color 0.2s;
+  flex-shrink: 0;
+  margin-left: 4px;
+  line-height: 1;
+  user-select: none;
+}
+.shortcuts-btn:hover {
+  background: rgba(79,142,247,0.15);
+  border-color: rgba(79,142,247,0.45);
+  color: var(--accent-blue);
+  transform: scale(1.1);
+}
+
+/* ── Light-mode: make both topbar icon buttons clearly visible ── */
+[data-theme="light"] .theme-toggle-btn,
+[data-theme="light"] .shortcuts-btn {
+  background: rgba(67,97,238,0.09);
+  border-color: rgba(67,97,238,0.30);
+  color: #4b4578;
+  box-shadow: 0 2px 8px rgba(67,97,238,0.12);
+}
+[data-theme="light"] .theme-toggle-btn:hover {
+  background: rgba(245,158,11,0.14);
+  border-color: rgba(245,158,11,0.50);
+  box-shadow: 0 4px 12px rgba(245,158,11,0.18);
+}
+[data-theme="light"] .shortcuts-btn:hover {
+  background: rgba(67,97,238,0.18);
+  border-color: rgba(67,97,238,0.55);
+  color: #4361ee;
+  box-shadow: 0 4px 12px rgba(67,97,238,0.18);
+}
+</style>
+
+
+
+<script>
+/* ── Theme Toggle ──────────────────────────────────────────────── */
+(function () {
+  'use strict';
+  const STORAGE_KEY = 'pm-theme';
+  const themeBtn = document.getElementById('themeToggleBtn');
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    themeBtn.textContent = theme === 'light' ? '☀️' : '🌙';
+    themeBtn.title = theme === 'light'
+      ? 'Switch to dark theme (T)'
+      : 'Switch to light theme (T)';
+    localStorage.setItem(STORAGE_KEY, theme);
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'light' ? 'dark' : 'light');
+  }
+
+  /* Restore saved preference, default to dark */
+  applyTheme(localStorage.getItem(STORAGE_KEY) || 'dark');
+
+  themeBtn.addEventListener('click', toggleTheme);
+})();
+
+/* ── Keyboard Shortcuts Modal ──────────────────────────────────── */
+(function () {
+  'use strict';
+  const backdrop = document.getElementById('shortcutsBackdrop');
+  const btn      = document.getElementById('shortcutsBtn');
+  const closeBtn = document.getElementById('shortcutsClose');
+
+  /** View key → nav item data-view map */
+  const VIEW_KEYS = { '1': 'overview', '2': 'process-map', '3': 'bottlenecks', '4': 'cases', '5': 'resources', 'u': 'upload' };
+
+  function openModal()  { backdrop.style.display = 'flex'; btn.setAttribute('aria-expanded','true');  }
+  function closeModal() { backdrop.style.display = 'none';  btn.setAttribute('aria-expanded','false'); }
+  function toggleModal(){ backdrop.style.display === 'none' ? openModal() : closeModal(); }
+
+  btn.addEventListener('click', toggleModal);
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', function(e){ if (e.target === backdrop) closeModal(); });
+
+  document.addEventListener('keydown', function (e) {
+    /* Ignore shortcuts when focus is inside an input / textarea */
+    const tag = document.activeElement && document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+    if (e.key === '?') { e.preventDefault(); toggleModal(); return; }
+    if (e.key === 'Escape' && backdrop.style.display !== 'none') { closeModal(); return; }
+
+    /* Only act on bare key presses (no Ctrl/Alt/Meta modifier) */
+    if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+    const view = VIEW_KEYS[e.key.toLowerCase()];
+    if (view) {
+      e.preventDefault();
+      const navItem = document.querySelector('[data-view="' + view + '"]');
+      if (navItem) navItem.click();
+    }
+
+    if (e.key.toLowerCase() === 's') {
+      e.preventDefault();
+      const sampleBtn = document.getElementById('loadSampleBtn');
+      if (sampleBtn) sampleBtn.click();
+    }
+
+    if (e.key.toLowerCase() === 't') {
+      e.preventDefault();
+      const themeBtn = document.getElementById('themeToggleBtn');
+      if (themeBtn) themeBtn.click();
+    }
+  });
+})();
+</script>
+
+<!-- Scripts: sql.js (SQLite WASM), Chart.js, D3, then our logic -->
+<script src="https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/sql-wasm.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="static/js/sql_db.js"></script>
+<script src="static/js/data_generator.js"></script>
+<script src="static/js/process_engine.js"></script>
+<script src="static/js/process_map.js"></script>
+<script src="static/js/dashboard.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,79 @@
+case_id,activity,timestamp,resource,department,cost,variant
+ORD-0001,Order Received,2024-01-02 08:00:00,Alice Johnson,Sales,0,Happy Path
+ORD-0001,Credit Check,2024-01-02 09:30:00,Dave Patel,Finance,45,Happy Path
+ORD-0001,Order Approved,2024-01-02 18:00:00,Grace Wong,Management,210,Happy Path
+ORD-0001,Inventory Check,2024-01-03 08:15:00,Ivan Cruz,Warehouse,60,Happy Path
+ORD-0001,Packed,2024-01-03 12:00:00,Ivan Cruz,Warehouse,85,Happy Path
+ORD-0001,Shipped,2024-01-05 10:00:00,Linda Zhao,Logistics,540,Happy Path
+ORD-0001,Invoice Sent,2024-01-05 12:30:00,Eve Kumar,Finance,30,Happy Path
+ORD-0001,Payment Received,2024-01-08 14:00:00,Eve Kumar,Finance,1020,Happy Path
+ORD-0001,Order Closed,2024-01-08 15:00:00,Alice Johnson,Sales,10,Happy Path
+ORD-0002,Order Received,2024-01-03 09:00:00,Bob Chen,Sales,0,Fast Track
+ORD-0002,Order Approved,2024-01-03 10:00:00,Harry Singh,Management,90,Fast Track
+ORD-0002,Inventory Check,2024-01-03 14:00:00,Julia Park,Warehouse,55,Fast Track
+ORD-0002,Packed,2024-01-03 18:30:00,Julia Park,Warehouse,75,Fast Track
+ORD-0002,Shipped,2024-01-05 08:00:00,Mike Torres,Logistics,480,Fast Track
+ORD-0002,Invoice Sent,2024-01-05 10:00:00,Frank Lee,Finance,25,Fast Track
+ORD-0002,Payment Received,2024-01-07 16:00:00,Frank Lee,Finance,980,Fast Track
+ORD-0002,Order Closed,2024-01-07 16:30:00,Bob Chen,Sales,8,Fast Track
+ORD-0003,Order Received,2024-01-04 07:30:00,Carol Smith,Sales,0,Credit Rejection
+ORD-0003,Credit Check,2024-01-04 11:00:00,Dave Patel,Finance,50,Credit Rejection
+ORD-0003,Order Approved,2024-01-04 15:00:00,Grace Wong,Management,120,Credit Rejection
+ORD-0004,Order Received,2024-01-05 08:45:00,Alice Johnson,Sales,0,Rework Loop
+ORD-0004,Credit Check,2024-01-05 10:00:00,Eve Kumar,Finance,48,Rework Loop
+ORD-0004,Order Approved,2024-01-05 20:00:00,Harry Singh,Management,195,Rework Loop
+ORD-0004,Inventory Check,2024-01-06 08:00:00,Kevin Ng,Warehouse,58,Rework Loop
+ORD-0004,Inventory Check,2024-01-06 12:00:00,Kevin Ng,Warehouse,62,Rework Loop
+ORD-0004,Packed,2024-01-06 16:00:00,Kevin Ng,Warehouse,80,Rework Loop
+ORD-0004,Shipped,2024-01-08 09:00:00,Linda Zhao,Logistics,510,Rework Loop
+ORD-0004,Invoice Sent,2024-01-08 11:00:00,Dave Patel,Finance,28,Rework Loop
+ORD-0004,Payment Received,2024-01-11 14:30:00,Dave Patel,Finance,1100,Rework Loop
+ORD-0004,Order Closed,2024-01-11 15:00:00,Alice Johnson,Sales,12,Rework Loop
+ORD-0005,Order Received,2024-01-06 11:00:00,Bob Chen,Sales,0,Express
+ORD-0005,Packed,2024-01-06 13:00:00,Julia Park,Warehouse,70,Express
+ORD-0005,Shipped,2024-01-07 08:00:00,Mike Torres,Logistics,420,Express
+ORD-0005,Invoice Sent,2024-01-07 10:00:00,Frank Lee,Finance,22,Express
+ORD-0005,Payment Received,2024-01-09 12:00:00,Frank Lee,Finance,890,Express
+ORD-0005,Order Closed,2024-01-09 12:30:00,Bob Chen,Sales,7,Express
+ORD-0006,Order Received,2024-01-07 09:00:00,Carol Smith,Sales,0,Happy Path
+ORD-0006,Credit Check,2024-01-07 11:30:00,Eve Kumar,Finance,42,Happy Path
+ORD-0006,Order Approved,2024-01-08 09:00:00,Grace Wong,Management,230,Happy Path
+ORD-0006,Inventory Check,2024-01-08 13:00:00,Ivan Cruz,Warehouse,65,Happy Path
+ORD-0006,Packed,2024-01-08 17:00:00,Ivan Cruz,Warehouse,90,Happy Path
+ORD-0006,Shipped,2024-01-10 10:00:00,Linda Zhao,Logistics,560,Happy Path
+ORD-0006,Invoice Sent,2024-01-10 12:00:00,Dave Patel,Finance,32,Happy Path
+ORD-0006,Payment Received,2024-01-14 09:00:00,Dave Patel,Finance,1080,Happy Path
+ORD-0006,Order Closed,2024-01-14 09:30:00,Carol Smith,Sales,11,Happy Path
+ORD-0007,Order Received,2024-01-08 08:00:00,Alice Johnson,Sales,0,Fast Track
+ORD-0007,Order Approved,2024-01-08 10:00:00,Harry Singh,Management,95,Fast Track
+ORD-0007,Inventory Check,2024-01-08 14:00:00,Julia Park,Warehouse,60,Fast Track
+ORD-0007,Packed,2024-01-08 18:00:00,Julia Park,Warehouse,78,Fast Track
+ORD-0007,Shipped,2024-01-10 07:30:00,Mike Torres,Logistics,500,Fast Track
+ORD-0007,Invoice Sent,2024-01-10 09:30:00,Frank Lee,Finance,27,Fast Track
+ORD-0007,Payment Received,2024-01-13 11:00:00,Frank Lee,Finance,960,Fast Track
+ORD-0007,Order Closed,2024-01-13 11:30:00,Alice Johnson,Sales,9,Fast Track
+ORD-0008,Order Received,2024-01-09 10:00:00,Bob Chen,Sales,0,Happy Path
+ORD-0008,Credit Check,2024-01-09 12:00:00,Dave Patel,Finance,46,Happy Path
+ORD-0008,Order Approved,2024-01-09 22:00:00,Grace Wong,Management,220,Happy Path
+ORD-0008,Inventory Check,2024-01-10 08:30:00,Kevin Ng,Warehouse,62,Happy Path
+ORD-0008,Packed,2024-01-10 13:00:00,Kevin Ng,Warehouse,88,Happy Path
+ORD-0008,Shipped,2024-01-12 09:00:00,Linda Zhao,Logistics,530,Happy Path
+ORD-0008,Invoice Sent,2024-01-12 11:00:00,Eve Kumar,Finance,31,Happy Path
+ORD-0008,Payment Received,2024-01-15 15:00:00,Eve Kumar,Finance,1050,Happy Path
+ORD-0008,Order Closed,2024-01-15 15:30:00,Bob Chen,Sales,10,Happy Path
+ORD-0009,Order Received,2024-01-10 08:00:00,Carol Smith,Sales,0,Express
+ORD-0009,Packed,2024-01-10 10:00:00,Ivan Cruz,Warehouse,68,Express
+ORD-0009,Shipped,2024-01-11 08:00:00,Mike Torres,Logistics,430,Express
+ORD-0009,Invoice Sent,2024-01-11 10:00:00,Frank Lee,Finance,23,Express
+ORD-0009,Payment Received,2024-01-13 14:00:00,Frank Lee,Finance,910,Express
+ORD-0009,Order Closed,2024-01-13 14:30:00,Carol Smith,Sales,8,Express
+ORD-0010,Order Received,2024-01-11 09:30:00,Alice Johnson,Sales,0,Rework Loop
+ORD-0010,Credit Check,2024-01-11 11:00:00,Dave Patel,Finance,49,Rework Loop
+ORD-0010,Order Approved,2024-01-12 08:00:00,Harry Singh,Management,200,Rework Loop
+ORD-0010,Inventory Check,2024-01-12 12:00:00,Julia Park,Warehouse,56,Rework Loop
+ORD-0010,Inventory Check,2024-01-12 16:00:00,Julia Park,Warehouse,64,Rework Loop
+ORD-0010,Packed,2024-01-13 08:00:00,Julia Park,Warehouse,82,Rework Loop
+ORD-0010,Shipped,2024-01-15 09:00:00,Linda Zhao,Logistics,520,Rework Loop
+ORD-0010,Invoice Sent,2024-01-15 11:00:00,Eve Kumar,Finance,29,Rework Loop
+ORD-0010,Payment Received,2024-01-18 13:00:00,Eve Kumar,Finance,1070,Rework Loop
+ORD-0010,Order Closed,2024-01-18 13:30:00,Alice Johnson,Sales,11,Rework Loop
